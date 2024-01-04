@@ -1,5 +1,5 @@
 const Animal = require("../models/animal");
-exports.enterAnimal = async (req, res, next)=> {
+exports.createAnimal = async (req, res, next)=> {
 
     // const {name} = req.body;
     // const animalExist = await Paradigm.findOne({name});
@@ -14,6 +14,24 @@ exports.enterAnimal = async (req, res, next)=> {
         res.status(201).json({
             success: true,
             animal
+        }) //paradigm was successfully created
+        // res.json({message: "checking again- controller user is working"})
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+};
+
+exports.displayAnimal = async (req, res, next)=> {
+
+    try {
+        const animals = await Animal.find().populate('paradigm');
+        res.status(201).json({
+            success: true,
+            animals
         }) //paradigm was successfully created
         // res.json({message: "checking again- controller user is working"})
     } catch (error) {

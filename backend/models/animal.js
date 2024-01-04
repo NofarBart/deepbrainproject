@@ -30,7 +30,7 @@ const animalSchema = new mongoose.Schema({
     },
     sex: {
         type: Number,
-        required: [true, 'Please add a if female(0) or male(1)'],
+        required: [true, 'Animal must be a female(0) or a male(1)'],
         min: 0,
         max: 1,
         validate : {
@@ -40,9 +40,9 @@ const animalSchema = new mongoose.Schema({
     },
     healthy: {
         type: Boolean,
-        required: [true, 'Animal must be a female(0) or a male(1)']
+        required: [true, 'Either "true" or "false"']
     },
-    paradigm_id: {
+    paradigm: {
         type: ObjectId,
         ref: "Paradigm",
         required: [true, 'Animal must have a paradigm']

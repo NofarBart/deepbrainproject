@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {enterParadigm} = require("../controllers/paradigm")
+const {createParadigm} = require("../controllers/paradigm")
 
-router.post('/enterParadigm', enterParadigm)
+router.post('/paradigm/create', createParadigm)
 
 module.exports = router;

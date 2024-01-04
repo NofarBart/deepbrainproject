@@ -1,5 +1,5 @@
 const Paradigm = require("../models/paradigm");
-exports.enterParadigm = async (req, res, next)=> {
+exports.createParadigm = async (req, res, next)=> {
 
     const {name} = req.body;
     const paradigmExist = await Paradigm.findOne({name});
