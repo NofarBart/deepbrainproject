@@ -1,23 +1,27 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+//Don't need this!!
 
-function App() {
-  const [notes, setNotes] = useState(null);
 
-  // useEffect(() => {
-  //   fetchNotes();
-  // }, []);
 
-  // const fetchNotes = async () => {
-  //   // //fetch the notes
-  //   const res = await axios.get("http://localhost:3000");
-  //   // //set to state
-  //   setNotes(res.data.notes);
-  //   console.log(res);
-  // };
-  return (
-    <div className="App">gdefg</div>
-  );
-}
+// import { useState, useEffect } from "react";
+// import axios from "axios";
 
-export default App;
+// function App() {
+//   const [notes, setNotes] = useState(null);
+
+//   // useEffect(() => {
+//   //   fetchNotes();
+//   // }, []);
+
+//   // const fetchNotes = async () => {
+//   //   // //fetch the notes
+//   //   const res = await axios.get("http://localhost:3000");
+//   //   // //set to state
+//   //   setNotes(res.data.notes);
+//   //   console.log(res);
+//   // };
+//   return (
+//     <div className="App">gdefg</div>
+//   );
+// }
+
+// export default App;
