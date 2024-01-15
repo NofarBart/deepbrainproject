@@ -1,15 +1,10 @@
 import express from 'express';
-const router = express.Router();
+const paradigmRouter = express.Router();
 import { Paradigm } from '../models/paradigm.js';
-// const {createParadigm} = require("../controllers/paradigm")
-
-// router.post('/paradigm/create', createParadigm)
-
-// module.exports = router;
 
 //route for save a new Paradigm
 
-router.post('/create', async (req, res) => {
+paradigmRouter.post('/', async (req, res) => {
     try {
         if (
             !req.body.name ||
@@ -36,22 +31,25 @@ router.post('/create', async (req, res) => {
 
 //route for get all paradigms from database
 
-router.get('/', async (req, res) => {
-    try {
-        const paradigms = await Paradigm.find({});
-        return res.status(200).json({
-            count: paradigms.length,
-            data: paradigms
-        });
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).send({ message: error.message });
-    }
+paradigmRouter.get('/', async (req, res) => {
+    Paradigm.find()
+        .then(paradigms => res.json(paradigms))
+        .catch(err => res.json(err))
+    // try {
+    //     const paradigms = await Paradigm.find({});
+    //     return res.status(200).json({
+    //         count: paradigms.length,
+    //         data: paradigms
+    //     });
+    // } catch (error) {
+    //     console.log(error.message);
+    //     res.status(500).send({ message: error.message });
+    // }
 });
 
-//route for get one paradigm from database by id
+// //route for get one paradigm from database by id
 
-router.get('/:id', async (req, res) => {
+paradigmRouter.get('/:id', async (req, res) => {
     try {
 
         const { id } = req.params;
@@ -66,7 +64,7 @@ router.get('/:id', async (req, res) => {
 
 //route for update a paradigm in database
 
-router.put('/:id', async (req, res) => {
+paradigmRouter.put('/:id', async (req, res) => {
     try {
         if (
             !req.body.name ||
@@ -95,7 +93,7 @@ router.put('/:id', async (req, res) => {
 
 //route for delete a paradigm in database
 
-router.delete('/:id', async (req, res) => {
+paradigmRouter.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const result = await Paradigm.findByIdAndDelete(id, req.body);
@@ -113,4 +111,4 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-export default router;
+export default paradigmRouter;

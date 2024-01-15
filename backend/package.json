@@ -18,5 +18,8 @@
     "mongoose": "^5.13.9",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.14"
+  },
+  "devDependencies": {
+    "eslint-plugin-react-refresh": "^0.4.5"
   }
 }

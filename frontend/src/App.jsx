@@ -22,6 +22,8 @@ const App = () => {
   // const [count, setCount] = useState(0)
   // will update list as database updates on refreshing the site
   const [paradigms, setParadigms] = useState([])
+  const [animals, setAnimals] = useState([])
+  
   // const [animalsNumber, setNumAnimals] = useState("")
 
   // const handleSubmit = (e) => {
@@ -38,10 +40,19 @@ const App = () => {
   useEffect(()=> {  
       // here we get the data by requesting data from this link
       // to our nodejs server
-      Axios.get('http://localhost:5555/getParadigms')
+      Axios.get('http://localhost:5555/paradigms')
       .then(paradigms => setParadigms(paradigms.data))
       .catch(err => console.log(err))
   }, []);
+
+  useEffect(()=> {  
+    // here we get the data by requesting data from this link
+    // to our nodejs server
+    Axios.get('http://localhost:5555/animals')
+    .then(animals => setAnimals(animals.data))
+    .catch(err => console.log(err))
+}, []);
+
 
   // // creating list of shoes
   // let val = list.map((item)=>{
@@ -117,9 +128,9 @@ const App = () => {
     // </Routes>
     
     <div className="index">
-      <Routes>
+      {/* <Routes>
         <Route path="/paradigms" component={ParadigmList} />
-      </Routes>
+      </Routes> */}
       <div className="div-3">
         <div className="overlap">
           <div className="a-mouse-from-th-wrapper">
@@ -133,18 +144,27 @@ const App = () => {
           {/* <BodyParts className="body-parts-instance" noOfOptions="zero" /> */}
           {/* <Component className="component-1" property1="default" />
           <Component className="component-instance" property1="default" text="Videos locations:" /> */}
-          <div className="text-wrapper-4">Subject:</div>
-          <div className="text-wrapper-5">Attempt:</div>
-          <div className="text-wrapper-6">Directory (save at):</div>
           <div className="text-wrapper-7">Experimental Paradigm:
             <select>
-              {paradigms.map(paradigm => {
-                return <option>
+              {paradigms.map((paradigm, index) => {
+                return <option key={index}>
                   {paradigm.name}
                 </option>
                 })} 
             </select>
           </div>
+          <div className="text-wrapper-4">Subject:
+          <select>
+              {animals.map((animal, index) => {
+                return <option key={index}>
+                  {animal.name}
+                </option>
+                })} 
+            </select>
+          </div>
+          <div className="text-wrapper-5">Attempt:</div>
+          <div className="text-wrapper-6">Directory (save at):</div>
+          
           <div className="text-wrapper-8">Parts:</div>
           <div className="frame-2">
             <div className="text-wrapper-9">Run</div>

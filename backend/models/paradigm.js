@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+const {ObjectId} = mongoose.Schema;
 export const paradigmSchema = mongoose.Schema(
     {
         name: {
@@ -22,11 +23,15 @@ export const paradigmSchema = mongoose.Schema(
             },
         
         },
-        // bodyParts: {
-        //     type: [Number],
-        //     default: [0],
-        //     required: [true, 'Please add body parts to analyze']
-        // }
+        bodyParts: {
+            type: [Number],
+            default: [0],
+            required: [true, 'Please add body parts to analyze']
+        },
+        Animals: [{
+            type: ObjectId,
+            ref: "Animal",
+         }]
     },
     {
         timestamps: true,

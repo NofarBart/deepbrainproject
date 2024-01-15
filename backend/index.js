@@ -2,7 +2,8 @@ import express from "express";
 import { PORT, DATABASE } from "./config.js";
 import mongoose from 'mongoose';
 import cors from 'cors';
-import paradigmsRoute from './routes/paradigmsRoute.js'
+import paradigmRouter from './routes/paradigmsRoute.js'
+import animalRouter from "./routes/animalsRoute.js";
 
 import { Paradigm } from "./models/paradigm.js"
 
@@ -55,12 +56,14 @@ mongoose.connect(DATABASE, {
 })
 .catch((err)=> console.log(err));
 
-app.get('/getParadigms', (req, res) => {
-    Paradigm.find()
-    .then(paradigms => res.json(paradigms))
-    .catch(err => res.json(err))
-})
+// app.get('/getParadigms', (req, res) => {
+//     Paradigm.find()
+//     .then(paradigms => res.json(paradigms))
+//     .catch(err => res.json(err))
+// })
 
+app.use('/paradigms', paradigmRouter);
+app.use('/animals', animalRouter)
 
 // const express = require('express');
 // const app = express();
