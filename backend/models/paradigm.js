@@ -20,12 +20,13 @@ export const paradigmSchema = mongoose.Schema(
                 validator : Number.isInteger,
                 message   : '{VALUE} is not an integer value'
             },
-        bodyParts: {
-            type: [Number],
-            default: [0],
-            required: [true, 'Please add body parts to analyze']
-        }
-        }
+        
+        },
+        // bodyParts: {
+        //     type: [Number],
+        //     default: [0],
+        //     required: [true, 'Please add body parts to analyze']
+        // }
     },
     {
         timestamps: true,

@@ -9,7 +9,7 @@ import { Paradigm } from '../models/paradigm.js';
 
 //route for save a new Paradigm
 
-router.post('/', async (req, res) => {
+router.post('/create', async (req, res) => {
     try {
         if (
             !req.body.name ||

@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import paradigmsRoute from './routes/paradigmsRoute.js'
 
+import { Paradigm } from "./models/paradigm.js"
+
 const app = express();
 
 //middleware for parsing req body
@@ -15,7 +17,15 @@ app.get('/', (req, res) => {
     return res.status(234).send('Welcome to DEEPBRAIN');
 })
 
-app.use('/paradigms', paradigmsRoute);
+// app.get('/getParadigms', (req, res) => {
+//     Paradigm.find()
+//     .then(paradigms => res.json(paradigms))
+//     .catch(err => res.json(err))
+// })
+
+// app.use('/paradigms', paradigmsRoute);
+
+// app.use(express.static('public'));
 
 //middleware for handling CORS policy
 
@@ -44,6 +54,12 @@ mongoose.connect(DATABASE, {
     })
 })
 .catch((err)=> console.log(err));
+
+app.get('/getParadigms', (req, res) => {
+    Paradigm.find()
+    .then(paradigms => res.json(paradigms))
+    .catch(err => res.json(err))
+})
 
 
 // const express = require('express');
