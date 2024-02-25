@@ -2,6 +2,29 @@ import express from 'express';
 const paradigmRouter = express.Router();
 import { Paradigm } from '../models/paradigm.js';
 
+
+//route for create csv file
+
+// paradigmRouter.post('/export', async (req, res) => {
+    
+//     try {
+//         var paradigmData = await Paradigm.find({}, {_id:0, createedAt:0, updatedAt:0, __v:0}, (err, paradigm) => {
+//         // console.log("paradigm",paradigm);
+//         })
+//         // const fields = ['name', 'number of animals'];
+//         // const opts = { fields };
+//         // const csv = parse(paradigm, opts);
+//         // fs.writeFile("paradigm1.csv", csv, function(error) {
+//         //     if(error) throw error;
+//         //     console.log("Writing was a success!");
+//         // });
+//         // console.log(csv);
+//     } catch(err) {
+//             res.status(500).send({ message: err.message });
+//         }
+//     // })
+// });
+
 //route for save a new Paradigm
 
 paradigmRouter.post('/', async (req, res) => {
