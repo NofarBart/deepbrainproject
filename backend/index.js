@@ -4,10 +4,12 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import paradigmRouter from './routes/paradigmsRoute.js'
 import animalRouter from "./routes/animalsRoute.js";
+// import directoryRouter from "./routes/directoryRoute.js";
 
 import { Paradigm } from "./models/paradigm.js"
 
 const app = express();
+
 
 //middleware for parsing req body
 
@@ -63,7 +65,21 @@ mongoose.connect(DATABASE, {
 // })
 
 app.use('/paradigms', paradigmRouter);
-app.use('/animals', animalRouter)
+app.use('/animals', animalRouter);
+// console.log("is here")
+// app.use('/project_directory', directoryRouter)
+// Parse JSON bodies
+
+// Define route handler for '/select-folder' POST requests
+app.post('/select-folder', (req, res) => {
+    const directoryPath = req.body;
+    console.log('Received directory path:', directoryPath);
+// Process the directory path as needed
+    // Here you can perform operations using the directory path
+
+    // Send a response back to the client
+    res.json({ message: 'Directory path received successfully' });
+});
 
 // const express = require('express');
 // const app = express();

@@ -8,7 +8,7 @@
 > and 2.1.1 version [mongosh](https://www.mongodb.com/try/download/shell) as its shell.
 > It is also assisted by the extension "MongoDB for VS Code".
 > This project uses machine learning tools, like [Deeplabcut](https://deeplabcut.github.io/DeepLabCut/docs/installation.html)
-> and [DLC2Kinematics](https://github.com/AdaptiveMotorControlLab/DLC2Kinematics)
+> and [DLC2Kinematics](https://github.com/AdaptiveMotorControlLab/DLC2Kinematics).
 > Please install all of it beforehand if you haven't already.
 
 To get started with the project, you'll first need to install the dependencies with:

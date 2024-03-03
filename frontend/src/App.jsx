@@ -17,13 +17,64 @@ import ParadigmList from './components/paradigmList';
 
 import React, { useEffect, useState } from "react";
 import Axios from 'axios';
-
+// import fs;
+// const fs = require('fs');
+// const path = require('path');
+let paradigm_name;
+let animal_name;
 const App = () => {
+
   // const [count, setCount] = useState(0)
   // will update list as database updates on refreshing the site
   const [paradigms, setParadigms] = useState([])
   const [animals, setAnimals] = useState([])
+  const [selectedFolder, setSelectedFolder] = useState(null);
+
   
+
+  paradigms.map(((paradigm, index) => {
+    if (index === 0 && paradigm_name == null) {
+      // console.log(paradigm_name)
+        // Save the name of the paradigm in index 0
+        // Assuming 'name' is the property name containing the paradigm's name
+        paradigm_name = paradigm.name;
+    } else {
+        // Return the original paradigm object for other elements
+        return paradigm;
+    }
+}));
+
+animals.map(((animal, index) => {
+  if (index === 0 && animal_name == null) {
+      // Save the name of the paradigm in index 0
+      // Assuming 'name' is the property name containing the paradigm's name
+      animal_name = animal.name;
+  } else {
+      // Return the original paradigm object for other elements
+      return animal;
+  }
+}));
+
+  // Example usage
+  const directoryPath = 'C:\\';
+  let path = directoryPath + animal_name + "_" + paradigm_name;
+
+  const handleSelectChangePara = (event) => {
+    const selectedIndex = event.target.selectedIndex;
+    const selectedName = event.target[selectedIndex].text;
+    // console.log(selectedName)
+    paradigm_name = selectedName
+    console.log(paradigm_name)
+  };
+  
+  const handleSelectChangeAni = (event) => {
+    const selectedIndex = event.target.selectedIndex;
+    const selectedName = event.target[selectedIndex].text;
+    // console.log(selectedName)
+    animal_name = selectedName
+    console.log(animal_name)
+  };
+
   // const [animalsNumber, setNumAnimals] = useState("")
 
   // const handleSubmit = (e) => {
@@ -53,6 +104,92 @@ const App = () => {
     .catch(err => console.log(err))
 }, []);
 
+
+
+// function loadFolder(paradigm_name, animal_name, directoryPath) {
+//     // Construct folder name
+//     const folderName = `${animal_name}_${paradigm_name}`;
+    
+//     // Path to the folder
+//     const folderPath = path.join(directoryPath, folderName);
+
+//     // Read contents of the folder
+//     fs.readdir(folderPath, (err, files) => {
+//         if (err) {
+//             console.error('Error reading folder:', err);
+//             return;
+//         }
+//         console.log(`Contents of ${folderName}:`, files);
+//         // Here you can process the files as needed
+//     });
+// }
+
+
+
+// loadFolder(paradigm_name, animal_name, directoryPath);
+
+
+// // `http://localhost:5555/select-folder?paradigm=${paradigm_name}&animalName=${animal_name}`
+
+// const handleSelectFolder = () => {
+//   Axios.get(`http://localhost:5555/select-folder?paradigm=${paradigm_name}&animalName=${animal_name}`)
+//     .then(response => {
+//       // console.log("tried and entered")
+//       setSelectedFolder(response.data.folder);
+//     })
+//     .catch(error => {
+//       console.error('Error selecting folder:', error);
+//     });
+// };
+
+
+const sendDirectoryPath = (paradigm_name, animal_name, directoryPath) => {
+  // const [selectedFolder, setSelectedFolder] = useState(null);
+  // Create directory string
+  
+  path = directoryPath + animal_name + "_" + paradigm_name;
+  console.log(path) 
+  // setSelectedFolder(null);
+  const data = { name: path }; // Object with key "name" and value "path"
+  Axios.post('http://localhost:5555/select-folder', JSON.stringify(data))
+    .catch(err => console.log(err))
+ // Run effect whenever these dependencies change
+  setSelectedFolder(path);
+
+//   useEffect(()=> {  
+//     // here we get the data by requesting data from this link
+//     // to our nodejs server
+//     Axios.post('http://localhost:5555/select-folder', path)
+//     .then(selectedFolder => setSelectedFolder(selectedFolder.data))
+//     .catch(err => console.log(err))
+// }, []);
+  // Define the data to be sent
+  // Define the fetch options
+//   const data = { path: path };
+//   const options = {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(data)
+// };
+//   fetch('http://localhost:5555/select-folder', options)
+//   .then(response => {
+//     if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//     }
+//     return response.json();
+// })
+//   .then(data => {
+//     // Handle the response from the server
+//     console.log('Response from server:', data);
+// })
+//   .catch(error => {
+//     console.error('There was a problem with the fetch operation:', error);
+// });
+
+  // Send the fetch request  
+}
 
   // // creating list of shoes
   // let val = list.map((item)=>{
@@ -144,8 +281,9 @@ const App = () => {
           {/* <BodyParts className="body-parts-instance" noOfOptions="zero" /> */}
           {/* <Component className="component-1" property1="default" />
           <Component className="component-instance" property1="default" text="Videos locations:" /> */}
+          
           <div className="text-wrapper-7">Experimental Paradigm:
-            <select>
+            <select onChange={handleSelectChangePara}>
               {paradigms.map((paradigm, index) => {
                 return <option key={index}>
                   {paradigm.name}
@@ -154,7 +292,7 @@ const App = () => {
             </select>
           </div>
           <div className="text-wrapper-4">Subject:
-          <select>
+          <select onChange={handleSelectChangeAni}>
               {animals.map((animal, index) => {
                 return <option key={index}>
                   {animal.name}
@@ -162,10 +300,19 @@ const App = () => {
                 })} 
             </select>
           </div>
+          <div className="text-wrapper-6">
+          <button type='submit' onClick={() => sendDirectoryPath(paradigm_name, animal_name, directoryPath)}>Choose location</button>
+          {selectedFolder && (
+          <div>
+            Selected Folder: {selectedFolder}
+          </div>
+          )}
+          </div>
           <div className="text-wrapper-5">Attempt:</div>
-          <div className="text-wrapper-6">Directory (save at):</div>
+          {/* <div className="text-wrapper-6">Directory (save at):</div> */}
           
           <div className="text-wrapper-8">Parts:</div>
+          
           <div className="frame-2">
             <div className="text-wrapper-9">Run</div>
           </div>
@@ -179,6 +326,7 @@ const App = () => {
             <div className="text-wrapper-9">Choose location</div>
           </div>
         </div>
+        
         <img
           className="deepbrain-logo"
           alt="Deepbrain logo"
@@ -188,8 +336,12 @@ const App = () => {
         {/* <li>
             <Link to="/create">Contact</Link>
         </li> */}
+        
       </div>
+      
+        {/* <input directory="" webkitdirectory="" type="file" /> */}
     </div>
+    
   );
 };
 
