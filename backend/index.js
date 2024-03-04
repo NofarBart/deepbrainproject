@@ -7,9 +7,10 @@ import animalRouter from "./routes/animalsRoute.js";
 // import directoryRouter from "./routes/directoryRoute.js";
 
 import { Paradigm } from "./models/paradigm.js"
-
+import { spawn } from 'child_process';
+// const { spawn } = require('child_process');
 const app = express();
-
+let path;
 
 //middleware for parsing req body
 
@@ -72,7 +73,9 @@ app.use('/animals', animalRouter);
 
 // Define route handler for '/select-folder' POST requests
 app.post('/select-folder', (req, res) => {
-    const directoryPath = req.body;
+    // console.log(req.body);
+    const directoryPath = JSON.parse(req.body.body).name;
+    path = directoryPath
     console.log('Received directory path:', directoryPath);
 // Process the directory path as needed
     // Here you can perform operations using the directory path
@@ -81,6 +84,43 @@ app.post('/select-folder', (req, res) => {
     res.json({ message: 'Directory path received successfully' });
 });
 
+app.post('/run-python-script', (req, res) => {
+    // Extract parameters from the request body
+    // const { parameter2 } = req.body;
+    const path = JSON.parse(req.body.body).name;
+    // Path to your Python script
+    const pythonScriptPath = 'complete_network_code.py';
+    const spawnOptions = {
+        // , TF_CPP_MIN_LOG_LEVEL: '2'
+        env: { ...process.env }, // Set TensorFlow log level
+        // cwd: '/path/to/working/directory', // Set working directory
+        stdio: 'inherit', // Inherit input/output streams
+        // timeout: 60000, // Set timeout to 60 seconds
+    };
+    console.log("entered python script req")
+    // Spawn a child process to execute the Python script with parameters
+    const pythonProcess = spawn('python', [pythonScriptPath, path], spawnOptions);
+    
+    // // Handle standard output data from the Python script
+    // pythonProcess.stdout.on('data', (data) => {
+    //     console.log(`Python script output: ${data}`);
+    //     // You can send data back to the client if needed
+    // });
+
+    // Handle errors that occur during execution
+    pythonProcess.on('error', (err) => {
+        console.error('Error executing Python script:', err);
+        // Send an error response back to the client
+        res.status(500).json({ error: 'Failed to execute Python script' });
+    });
+
+    // Handle process exit
+    pythonProcess.on('exit', (code) => {
+        console.log(`Python script exited with code ${code}`);
+        // Optionally, send a success response back to the client
+        res.json({ message: 'Python script executed successfully' });
+    });
+});
 // const express = require('express');
 // const app = express();
 // require('dotenv').config();

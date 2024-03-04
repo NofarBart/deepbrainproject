@@ -105,21 +105,28 @@
 
 .index .text-wrapper-4 {
   color: #ffffff;
+  background-color: #919f90;
+  border-radius: 10px;
+  /* border-width: 40; */
+  display:flex;
+  gap: 25px;
+  justify-content: center;
   font-family: "Inter", Helvetica;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 600;
   left: 398px;
-  letter-spacing: 0;
+  letter-spacing: 1;
   line-height: normal;
   position: absolute;
   top: 232px;
-  width: 361px;
+  /* width: 361px; */
+  padding: 10px;
 }
 
 .index .text-wrapper-5 {
   color: #ffffff;
   font-family: "Inter", Helvetica;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 600;
   left: 398px;
   letter-spacing: 0;
@@ -132,7 +139,7 @@
 .index .text-wrapper-6 {
   color: #ffffff;
   font-family: "Inter", Helvetica;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 600;
   left: 400px;
   letter-spacing: 0;
@@ -144,21 +151,27 @@
 
 .index .text-wrapper-7 {
   color: #ffffff;
+  background-color: #919f90;
+  border-radius: 10px;
+  display: inline-flex;
+  gap: 25px;
+  justify-content: center;
   font-family: "Inter", Helvetica;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 600;
   left: 398px;
-  letter-spacing: 0;
+  letter-spacing: 1;
   line-height: normal;
   position: absolute;
   top: 141px;
-  width: 466px;
+  padding: 10px;
+  /* width: 466px; */
 }
 
 .index .text-wrapper-8 {
   color: #ffffff;
   font-family: "Inter", Helvetica;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 600;
   left: 406px;
   letter-spacing: 0;
@@ -184,7 +197,7 @@
 .index .text-wrapper-9 {
   color: #ffffff;
   font-family: "Inter", Helvetica;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 600;
   letter-spacing: 0;
   line-height: normal;
