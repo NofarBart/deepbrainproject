@@ -87,7 +87,8 @@ app.post('/select-folder', (req, res) => {
 app.post('/run-python-script', (req, res) => {
     // Extract parameters from the request body
     // const { parameter2 } = req.body;
-    const path = JSON.parse(req.body.body).name;
+    const config = JSON.parse(req.body.body).config;
+    const path = JSON.parse(req.body.body).videos;
     // Path to your Python script
     const pythonScriptPath = 'complete_network_code.py';
     const spawnOptions = {
@@ -99,14 +100,35 @@ app.post('/run-python-script', (req, res) => {
     };
     console.log("entered python script req")
     // Spawn a child process to execute the Python script with parameters
-    const pythonProcess = spawn('python', [pythonScriptPath, path], spawnOptions);
+    const pythonProcess = spawn('python', [pythonScriptPath, config, path], spawnOptions);
     
-    // // Handle standard output data from the Python script
-    // pythonProcess.stdout.on('data', (data) => {
-    //     console.log(`Python script output: ${data}`);
-    //     // You can send data back to the client if needed
+    // Handle standard output data from the Python script
+    pythonProcess.stdout.on("data", (data) => {
+        // console.log(`Python script output: ${data}`);
+        res.write(data);
+        // You can send data back to the client if needed
+    });
+        
+
+    // let totalFrames = 0;
+    // let currentFrame = 0;
+
+    // pythonProcess.stdout.on('data', data => {
+    //     const output = data.toString();
+    //     console.log(output)
+    //     const match = output.match(/(\d+)\/(\d+)/); // Match the current frame and total frames
+
+    //     if (match) {
+    //         currentFrame = parseInt(match[1]);
+    //         totalFrames = parseInt(match[2]);
+    //         const percentage = (currentFrame / totalFrames) * 100;
+    //         res.send(percentage.toString());
+    //     }
     // });
 
+    pythonProcess.stderr.on('data', data => {
+        console.error(`stderr: ${data}`);
+    });
     // Handle errors that occur during execution
     pythonProcess.on('error', (err) => {
         console.error('Error executing Python script:', err);

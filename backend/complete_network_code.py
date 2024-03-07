@@ -27,10 +27,12 @@ VideoType = 'mp4'
 
 # Path to the video file
 # video_path = "C:\Experiment16-Tester16-2024-02-21\\videos\\vid2.mp4"
-video_path = "D:\\testing_videos_new\\vid3.mp4"
+# video_path = "D:\\testing_videos_new\\vid3.mp4"
 # config = 'C:\Experiment16-Tester16-2024-02-21\config.yaml'
 config = os.path.join(os.getcwd(),sys.argv[ONE])
+video_path = os.path.join(os.getcwd(),sys.argv[TWO])
 print("config path is: ", config)
+print("video dir path is: ", video_path)
 h5 = 'C:\Experiment16-Tester16-2024-02-21\\videos\\vid2DLC_resnet50_Experiment16Feb21shuffle1_7800.h5'
 
 print("start analyzing videos...")
