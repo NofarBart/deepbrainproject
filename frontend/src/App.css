@@ -104,8 +104,8 @@
 }
 
 .index .text-wrapper-4 {
-  color: #ffffff;
-  background-color: #919f90;
+  color: #291b25;
+  background-color: #c7ddcc;
   border-radius: 10px;
   /* border-width: 40; */
   display:inline-flex;
@@ -118,27 +118,27 @@
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
-  top: 232px;
+  top: 20%;
   /* width: 361px; */
   padding: 10px;
   width: 30%; /* Set the desired width using viewport units */
 }
 
 .index .text-wrapper-5 {
-  color: #ffffff;
+  /* color: #291b25;
   font-family: "Inter", Helvetica;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 600; */
   left: 398px;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 333px;
-  width: 361px;
+  top: 30%;
+  width: 30%;
 }
 
 .index .text-wrapper-6 {
-  color: #ffffff;
+  color: #291b25;
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
@@ -151,8 +151,8 @@
 }
 
 .index .text-wrapper-7 {
-  color: #ffffff;
-  background-color: #919f90;
+  color: #291b25;
+  background-color: #c7ddcc;
   border-radius: 10px;
   display: inline-flex;
   gap: 25px;
@@ -164,13 +164,13 @@
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
-  top: 141px;
+  top: 10%;
   padding: 10px;
   width: 30%; /* Set the desired width using viewport units */
 }
 
 .index .text-wrapper-8 {
-  color: #ffffff;
+  color: #291b25;
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
@@ -179,12 +179,12 @@
   line-height: normal;
   position: absolute;
   top: 599px;
-  width: 361px;
+  width: 30%;
 }
 
 .index .frame-2 {
   align-items: center;
-  background-color: #919f90;
+  background-color: #c7ddcc;
   border-radius: 15px;
   display: inline-flex;
   gap: 10px;
@@ -196,7 +196,7 @@
 }
 
 .index .text-wrapper-9 {
-  color: #ffffff;
+  color: #291b25;
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
@@ -209,7 +209,7 @@
 
 .index .frame-3 {
   align-items: center;
-  background-color: #919f90;
+  background-color: #c7ddcc;
   border-radius: 15px;
   display: inline-flex;
   gap: 10px;
@@ -240,7 +240,7 @@
 
 .index .frame-4 {
   align-items: center;
-  background-color: #919f90;
+  background-color: #c7ddcc;
   border-radius: 15px;
   display: inline-flex;
   gap: 10px;

@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 // import React from 'react';
 
-
 import React, { useEffect, useState } from "react";
 import Axios from 'axios';
 // import fs;
@@ -18,6 +17,7 @@ const App = () => {
   const [paradigms, setParadigms] = useState([])
   const [animals, setAnimals] = useState([])
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
   // const [progress, setProgress] = useState(0); // State to track progress
   const [percentage, setPercentage] = useState(null);
 
@@ -56,12 +56,6 @@ animals.map(((animal, index) => {
   // Example usage
   const directoryPath = 'C:\\\\';
   let path = directoryPath + animal_name + "_" + paradigm_name;
-
-  // if (paradigm_name != null && animal_name != null) {
-  //   path = directoryPath + animal_name + "_" + paradigm_name;
-  //   setSelectedFolder(path);
-
-  // }
 
   const handleSelectChangePara = (event) => {
     const selectedIndex = event.target.selectedIndex;
@@ -127,31 +121,26 @@ animals.map(((animal, index) => {
 }, []);
 
 
-
-const sendDirectoryPath = (paradigm_name, animal_name, directoryPath) => {
-  // const [selectedFolder, setSelectedFolder] = useState(null);
-  // Create directory string
-  
-  path = directoryPath + animal_name + "_" + paradigm_name;
-  console.log(path) 
-  // setSelectedFolder(null);
-  const data = { name: path }; // Object with key "name" and value "path"
-  const options = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-};
-  Axios.post('http://localhost:5555/select-folder', options)
-    .catch(err => console.log(err))
- // Run effect whenever these dependencies change
-  // setSelectedFolder(path);
-
-}
-
   const fetchData = async () => {
       try {
+          if(animal_name == null || paradigm_name == null) {
+            setIsVisible(true);
+            return;
+          }
+          setIsVisible(false);
+          path = directoryPath + animal_name + "_" + paradigm_name;
+          console.log(path) 
+          // setSelectedFolder(null);
+          const data_folder = { name: path }; // Object with key "name" and value "path"
+          const options_folder = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data_folder)
+        };
+          Axios.post('http://localhost:5555/select-folder', options_folder)
+            .catch(err => console.log(err))
           let config_path = 'C:\\Experiment16-Tester16-2024-02-21\\config.yaml'
           const data = { config: config_path, videos: path }; // Object with key "name" and value "path"
           const options = {
@@ -168,45 +157,6 @@ const sendDirectoryPath = (paradigm_name, animal_name, directoryPath) => {
       }
   };
 
-
-// const analyzeVideos = () => {
-//   let config_path = 'C:\\Experiment16-Tester16-2024-02-21\\config.yaml'
-//   // const [selectedFolder, setSelectedFolder] = useState(null);
-//   // Create directory string
-  
-// //   path = directoryPath + animal_name + "_" + paradigm_name;
-//   console.log(path) 
-// //   // setSelectedFolder(null);
-//   const data = { config: config_path, videos: path }; // Object with key "name" and value "path"
-//   const options = {
-//     method: 'POST',
-//     headers: {
-//         'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(data),
-//     onUploadProgress: (progressEvent) => {
-//       // Calculate progress percentage
-//       const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-//       // Update progress state
-//       setProgress(progress);
-//     }
-// };
-//   Axios.post('http://localhost:5555/run-python-script', options)
-//   .then(response => {
-//     console.log('Response from server:', response);
-//     // Reset progress when API call is complete
-//     setProgress(0);
-//   })
-//   .catch(error => {
-//     console.error('Error sending POST request:', error);
-//     // Reset progress on error
-//     setProgress(0);
-//   });
-    // .catch(err => console.log(err))
- // Run effect whenever these dependencies change
-  // setSelectedFolder(path);
-
-// }
 
   return (
     
@@ -241,27 +191,26 @@ const sendDirectoryPath = (paradigm_name, animal_name, directoryPath) => {
                 })} 
             </select>
           </div>
-          <div className="text-wrapper-5">
-          <Button variant="dark" size="lg" type='submit' onClick={() => sendDirectoryPath(paradigm_name, animal_name, directoryPath)}>Choose location</Button>{' '}
+          <div className="alert alert-success text-wrapper-5" role="alert">
+            <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>
+            <hr></hr>
           {selectedFolder && (
           <div>
             Selected Folder: {selectedFolder}
           </div>
           )}
           </div>
-          {/* <div className="text-wrapper-5">Attempt:</div> */}
           
-          <div className="text-wrapper-8">Parts:</div>
-          
-          <div className="frame-2">
+          <div className="text-wrapper-8">
+            {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
             <Button variant="dark" size="lg" type='submit' onClick={() => fetchData()}>Run</Button>{' '}
             <div>
-            <h1>Child Process Percentage</h1>
-            {percentage !== null ? (
+            {/* <h1>Child Process Percentage</h1> */}
+            {/* {percentage !== null ? (
                 <p>Percentage: {percentage}</p>
             ) : (
                 <p>Loading...</p>
-            )}
+            )} */}
         </div>
           </div>
           <div className="frame-3">
