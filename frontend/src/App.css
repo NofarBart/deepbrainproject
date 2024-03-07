@@ -108,7 +108,7 @@
   background-color: #919f90;
   border-radius: 10px;
   /* border-width: 40; */
-  display:flex;
+  display:inline-flex;
   gap: 25px;
   justify-content: center;
   font-family: "Inter", Helvetica;
@@ -121,6 +121,7 @@
   top: 232px;
   /* width: 361px; */
   padding: 10px;
+  width: 30%; /* Set the desired width using viewport units */
 }
 
 .index .text-wrapper-5 {
@@ -165,7 +166,7 @@
   position: absolute;
   top: 141px;
   padding: 10px;
-  /* width: 466px; */
+  width: 30%; /* Set the desired width using viewport units */
 }
 
 .index .text-wrapper-8 {

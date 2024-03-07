@@ -103,11 +103,11 @@ app.post('/run-python-script', (req, res) => {
     const pythonProcess = spawn('python', [pythonScriptPath, config, path], spawnOptions);
     
     // Handle standard output data from the Python script
-    pythonProcess.stdout.on("data", (data) => {
-        // console.log(`Python script output: ${data}`);
-        res.write(data);
-        // You can send data back to the client if needed
-    });
+    // pythonProcess.stdout.on("data", (data) => {
+    //     // console.log(`Python script output: ${data}`);
+    //     res.write(data);
+    //     // You can send data back to the client if needed
+    // });
         
 
     // let totalFrames = 0;
@@ -126,9 +126,9 @@ app.post('/run-python-script', (req, res) => {
     //     }
     // });
 
-    pythonProcess.stderr.on('data', data => {
-        console.error(`stderr: ${data}`);
-    });
+    // pythonProcess.stderr.on('data', data => {
+    //     console.error(`stderr: ${data}`);
+    // });
     // Handle errors that occur during execution
     pythonProcess.on('error', (err) => {
         console.error('Error executing Python script:', err);

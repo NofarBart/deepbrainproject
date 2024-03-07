@@ -146,7 +146,7 @@ const sendDirectoryPath = (paradigm_name, animal_name, directoryPath) => {
   Axios.post('http://localhost:5555/select-folder', options)
     .catch(err => console.log(err))
  // Run effect whenever these dependencies change
-  setSelectedFolder(path);
+  // setSelectedFolder(path);
 
 }
 
@@ -241,7 +241,7 @@ const sendDirectoryPath = (paradigm_name, animal_name, directoryPath) => {
                 })} 
             </select>
           </div>
-          <div className="frame-4">
+          <div className="text-wrapper-5">
           <Button variant="dark" size="lg" type='submit' onClick={() => sendDirectoryPath(paradigm_name, animal_name, directoryPath)}>Choose location</Button>{' '}
           {selectedFolder && (
           <div>
@@ -249,7 +249,7 @@ const sendDirectoryPath = (paradigm_name, animal_name, directoryPath) => {
           </div>
           )}
           </div>
-          <div className="text-wrapper-5">Attempt:</div>
+          {/* <div className="text-wrapper-5">Attempt:</div> */}
           
           <div className="text-wrapper-8">Parts:</div>
           
