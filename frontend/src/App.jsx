@@ -1,13 +1,17 @@
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 // import React from 'react';
+
 
 import React, { useEffect, useState } from "react";
 import Axios from 'axios';
 // import fs;
 // const fs = require('fs');
 // const path = require('path');
+const zero = 0
+const one = 1
 let paradigm_name;
 let animal_name;
 const App = () => {
@@ -18,6 +22,7 @@ const App = () => {
   const [animals, setAnimals] = useState([])
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [output, setOutput] = useState('');
   // const [progress, setProgress] = useState(0); // State to track progress
   const [percentage, setPercentage] = useState(null);
 
@@ -56,6 +61,7 @@ animals.map(((animal, index) => {
   // Example usage
   const directoryPath = 'C:\\\\';
   let path = directoryPath + animal_name + "_" + paradigm_name;
+  let response;
 
   const handleSelectChangePara = (event) => {
     const selectedIndex = event.target.selectedIndex;
@@ -65,13 +71,14 @@ animals.map(((animal, index) => {
       console.log("Entered if")
       paradigm_name = null
       setSelectedFolder(null)
-  
     }
     else {
       paradigm_name = selectedName
       console.log(paradigm_name)
     }
-    
+    setIsVisible(false)
+    setOutput(null)
+    document.getElementById("python").innerHTML = "";
     if (animal_name != null && paradigm_name != null) {
       const path = directoryPath + animal_name + "_" + paradigm_name;
       setSelectedFolder(path);
@@ -87,12 +94,15 @@ animals.map(((animal, index) => {
       console.log("Entered if 2")
       animal_name = null
       setSelectedFolder(null)
-  
+      
     }
     else {
       animal_name = selectedName
       console.log(animal_name)
     }
+    setIsVisible(false)
+    setOutput(null)
+    document.getElementById("python").innerHTML = "";
     // console.log(selectedName)
   
     if (animal_name != null && paradigm_name != null) {
@@ -119,6 +129,7 @@ animals.map(((animal, index) => {
     .then(animals => setAnimals(animals.data))
     .catch(err => console.log(err))
 }, []);
+
 
 
   const fetchData = async () => {
@@ -150,12 +161,68 @@ animals.map(((animal, index) => {
             },
             body: JSON.stringify(data)
           };
-          const response = await Axios.post('http://localhost:5555/run-python-script', options);
-          setPercentage(response.data.message);
-      } catch (error) {
-          console.error('Error fetching data:', error);
-      }
-  };
+          document.getElementById("python").innerHTML = "analyzing video(s)";
+          document.getElementById("spinner").style.display = "block"
+
+          // // get the current value of the clock's display property
+          // var displaySetting = mySpinner.style.display;
+          // if (displaySetting == 'none') {
+          //   // clock is visible. hide it
+          //   mySpinner.style.display = 'block';
+          // }
+
+          Axios.post('http://localhost:5555/run-python-script', options)
+          .then(response => {
+            // Handle successful response
+            if (response.data.error) {
+              setOutput(prevOutput => prevOutput + response.data.error);
+              document.getElementById('spinner').style.display = "none"
+            }
+          })
+          .catch (error => {
+            if (Axios.isCancel(error)) {
+              console.log('Request canceled:', error.message);
+            } else {
+              // Handle other errors
+              console.error('Error fetching data:', error);
+            }
+            document.getElementById('spinner').style.display = "none"
+          });
+    
+          // setOutput(prevOutput => prevOutput + response.data);
+          // Check if the process exited successfully
+          // console.log("\n\n\n\nData isssssssssssssssss:\n\n\n\n\n ", response.data)
+          // let res = JSON.parse(response.data);
+          // console.log(res);
+          // if (res) {
+          //   setOutput(prevOutput => prevOutput + res);
+          // }
+          
+          
+          // console.log(response.data)
+          // setPercentage(response.data.message);
+      
+      // if (displaySetting == 'block') {
+      //   // clock is visible. hide it
+      //   mySpinner.style.display = 'none';
+      // }
+      
+  }
+  catch {
+  }
+}
+  const killPython = async () => {
+    Axios.post('http://localhost:5555/stop-process')
+      .then(response => {
+        console.log(response.data.message);
+        setIsVisible(false)
+        setOutput(null)
+        document.getElementById("python").innerHTML = "";
+      })
+      .catch(error => {
+        console.error('Error stopping process:', error);
+      });
+  }
 
 
   return (
@@ -199,25 +266,28 @@ animals.map(((animal, index) => {
             Selected Folder: {selectedFolder}
           </div>
           )}
-          </div>
+          <p id="python"></p>
+          <Spinner id='spinner' animation="border" role="status"></Spinner>
+          
+            <div>
+              {/* <h2>Command Output:</h2> */}
+              <pre>{output}</pre>
+            </div>
+        </div>
           
           <div className="text-wrapper-8">
             {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
             <Button variant="dark" size="lg" type='submit' onClick={() => fetchData()}>Run</Button>{' '}
-            <div>
+            <Button variant="dark" size="lg" type='submit' onClick={() => killPython()}>Stop</Button>{' '}
+            {/* <div> */}
             {/* <h1>Child Process Percentage</h1> */}
             {/* {percentage !== null ? (
                 <p>Percentage: {percentage}</p>
             ) : (
                 <p>Loading...</p>
             )} */}
-        </div>
-          </div>
-          <div className="frame-3">
-            <div className="text-wrapper-9">Restart</div>
-          {/* </div>
-          {/* <div className="frame-4">
-            {/* <div className="text-wrapper-9">Choose location</div> */}
+            
+        {/* </div> */}
           </div>
         </div>
         

@@ -5,12 +5,19 @@ import cors from 'cors';
 import paradigmRouter from './routes/paradigmsRoute.js'
 import animalRouter from "./routes/animalsRoute.js";
 // import directoryRouter from "./routes/directoryRoute.js";
-
 import { Paradigm } from "./models/paradigm.js"
 import { spawn } from 'child_process';
+import { exec } from 'child_process'; // Import exec function from child_process module
+import { exit } from "process";
+import os from 'os';
+
+// Use dynamic import to load tree-kill
+import kill from 'tree-kill';
+// const kill = import('tree-kill');
 // const { spawn } = require('child_process');
 const app = express();
 let path;
+let pythonProcess;
 
 //middleware for parsing req body
 
@@ -84,104 +91,71 @@ app.post('/select-folder', (req, res) => {
     res.json({ message: 'Directory path received successfully' });
 });
 
+
 app.post('/run-python-script', (req, res) => {
-    // Extract parameters from the request body
-    // const { parameter2 } = req.body;
-    const config = JSON.parse(req.body.body).config;
-    const path = JSON.parse(req.body.body).videos;
-    // Path to your Python script
-    const pythonScriptPath = 'complete_network_code.py';
-    const spawnOptions = {
-        // , TF_CPP_MIN_LOG_LEVEL: '2'
-        env: { ...process.env }, // Set TensorFlow log level
-        // cwd: '/path/to/working/directory', // Set working directory
-        stdio: 'inherit', // Inherit input/output streams
-        // timeout: 60000, // Set timeout to 60 seconds
-    };
-    console.log("entered python script req")
-    // Spawn a child process to execute the Python script with parameters
-    const pythonProcess = spawn('python', [pythonScriptPath, config, path], spawnOptions);
+        console.log("entered python script command")
+        const config = JSON.parse(req.body.body).config;
+        console.log("config is: ", config)
+        const path = JSON.parse(req.body.body).videos;
+        console.log("path is: ", path)
+        const pythonScriptPath = 'complete_network_code.py';
     
-    // Handle standard output data from the Python script
-    // pythonProcess.stdout.on("data", (data) => {
-    //     // console.log(`Python script output: ${data}`);
-    //     res.write(data);
-    //     // You can send data back to the client if needed
-    // });
+        // Construct the command to execute the Python script with parameters
+        const command = `python ${pythonScriptPath} ${config} ${path}`;
+
+        // Execute the command using spawn
+        pythonProcess = spawn('python', [pythonScriptPath, config, path], { shell: true, stdio: 'pipe' });
+
+        // Check if the request includes a cancellation token
         
+        // Collect stdout and stderr data
+        let output = '';
+        let error = '';
 
-    // let totalFrames = 0;
-    // let currentFrame = 0;
+        // res.setHeader('Content-Type', 'text/event-stream');
+        // res.setHeader('Cache-Control', 'no-cache');
+        // res.setHeader('Connection', 'keep-alive');
 
-    // pythonProcess.stdout.on('data', data => {
-    //     const output = data.toString();
-    //     console.log(output)
-    //     const match = output.match(/(\d+)\/(\d+)/); // Match the current frame and total frames
-
-    //     if (match) {
-    //         currentFrame = parseInt(match[1]);
-    //         totalFrames = parseInt(match[2]);
-    //         const percentage = (currentFrame / totalFrames) * 100;
-    //         res.send(percentage.toString());
-    //     }
-    // });
-
-    // pythonProcess.stderr.on('data', data => {
-    //     console.error(`stderr: ${data}`);
-    // });
-    // Handle errors that occur during execution
-    pythonProcess.on('error', (err) => {
-        console.error('Error executing Python script:', err);
-        // Send an error response back to the client
-        res.status(500).json({ error: 'Failed to execute Python script' });
+        // // Send initial response
+        // res.write('data: Initial response\n\n');
+            
+        pythonProcess.stdout.on('data', (data) => {
+            console.log('Python script output:', data.toString());
+            output += data.toString();
+            // res.write(data); // Stream stderr data to the response
+        });
+    
+        pythonProcess.stderr.on('data', (data) => {
+            console.error('Python script error:', data.toString());
+            error += data.toString();
+            // res.write(error);
+            // res.json({ output, error }); // Send the output, error, and exit code
+            // res.write(JSON.stringify(data.toString())); // Stream stderr data to the response
+        });
+    
+        // Handle process exit
+        pythonProcess.on('exit', (code) => {
+            console.log(`Python script exited with code ${code}`);
+            res.json({ output, error, exitCode: code }); // Send the output, error, and exit code
+        });
+        // Handle process exit
+        // pythonProcess.on('exit', (code) => {
+        //     console.log(`Python script exited with code ${code}`);
+        //     res.end(); // End the response when the script finishes
+        // });
     });
 
-    // Handle process exit
-    pythonProcess.on('exit', (code) => {
-        console.log(`Python script exited with code ${code}`);
-        // Optionally, send a success response back to the client
-        res.json({ message: 'Python script executed successfully' });
+    // Endpoint to stop the child process
+    app.post('/stop-process', (req, res) => {
+        if (pythonProcess) {
+            // where the killing happens
+            kill(pythonProcess.pid);
+            res.status(200).json({ message: 'Child process stopped successfully.' });
+        } else {
+        res.status(404).json({ message: 'No child process running.' });
+        }
     });
-});
-// const express = require('express');
-// const app = express();
-// require('dotenv').config();
-// const mongoose = require('mongoose');
-// const bodyParser = require('body-parser');
-// const morgan = require('morgan');
-
-// //import routes
-
-// const paradigmRoutes = require('./routes/paradigm');
-// const animalRoutes = require('./routes/animal');
-
-// //conect DB
-
-// mongoose.connect(process.env.DATABASE, {
-//     useNewUrlParser: true, 
-//     useUnifiedTopology: true,
-//     useCreateIndex: true
-// })
-// .then(()=> console.log('DB connected'))
-// .catch((err)=> console.log(err));
-
-// //middleware
-
-// app.use(morgan('dev'));
-// app.use(bodyParser.json());
-
-// //routes middleware
-
-// app.use("/api", paradigmRoutes);
-// app.use("/api", animalRoutes);
-// // app.get('/', (req, res)=>{
-// //     res.send('Hi Nofar from nodejs');
-// // })
 
 
 
-// const port = process.env.PORT || 8000;
 
-// app.listen(port, ()=>{
-//     console.log(`App is running on port ${port}`);
-// })

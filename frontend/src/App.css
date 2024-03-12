@@ -41,6 +41,9 @@
   color: #888;
 } */
 
+#spinner {
+  display: none;
+}
 
 .index {
   background-color: #5a6d67;
@@ -178,7 +181,7 @@
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 599px;
+  top: 80%;
   width: 30%;
 }
 
