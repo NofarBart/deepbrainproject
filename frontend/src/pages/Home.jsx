@@ -47,6 +47,11 @@ const Home = () => {
     navigate('/createAnimal', {replace: true});
   };
 
+  const navigateToDeleteAnimal = () => {
+    // 👇️ navigate to /contacts
+    navigate('/deleteAnimal', {replace: true});
+  };
+
   paradigms.map(((paradigm, index) => {
     if (index === 0 && paradigm_name == null) {
         paradigm_name = null; 
@@ -255,6 +260,7 @@ animals.map(((animal, index) => {
                 })} 
             </select>
             <Button className='btn btn-outline-success' variant='light' size="lg" onClick={navigateToCreateAnimal}>add</Button>
+            <Button className='btn btn-outline-danger' variant='light' size="lg" onClick={navigateToDeleteAnimal}>delete</Button>
           </div>
           <div className="alert alert-success text-wrapper-5" role="alert">
             <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>

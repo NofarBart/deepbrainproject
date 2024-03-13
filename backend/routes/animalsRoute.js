@@ -23,6 +23,24 @@ animalRouter.post('/', async (req, res) => {
         res.status(500).send({ message: error.message });
     }
 });
+
+animalRouter.delete('/:name', async (req, res) => {
+    try {
+        const { name } = req.params; // Extract name from req.params
+        const result = await Animal.findOneAndDelete({ name: name });
+        if (!result) {
+            return res.status(404).send({
+                message: 'Animal not found',
+            });
+        }
+        return res.status(200).send({
+            message: 'Animal deleted successfully',
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({ message: error.message });
+    }
+});
 // animalRouter.post('/', async (req, res) => {
 //     try {
 //         if (
