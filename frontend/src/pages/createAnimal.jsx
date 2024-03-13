@@ -4,9 +4,9 @@ import Button from 'react-bootstrap/Button';
 import '../App.css'
 import Axios from 'axios';
 
-const CreateParadigm = () => {
+const CreateAnimal = () => {
     const navigate = useNavigate(); // Initialize useNavigate hook
-    const [paradigms, setParadigms] = useState([])
+    const [animals, setAnimals] = useState([])
     const [formData, setFormData] = useState({
         name: "",
         animalsNumber: "",
@@ -20,8 +20,8 @@ const CreateParadigm = () => {
     useEffect(()=> {  
         // here we get the data by requesting data from this link
         // to our nodejs server
-        Axios.get('http://localhost:5555/paradigms')
-        .then(paradigms => setParadigms(paradigms.data))
+        Axios.get('http://localhost:5555/animals')
+        .then(animals => setAnimals(animals.data))
         .catch(err => console.log(err))
     }, []);
 
@@ -47,21 +47,21 @@ const CreateParadigm = () => {
         if (!formData.name) {
           errors.name = "Name is required";
         }
-    
-        // Check if password is empty
-        if (!formData.animalsNumber) {
-          errors.animalsNumber = "Number is required";
-        }
 
-        if (!checkString(formData.animalsNumber)) {
-            errors.animalsNumber = "Input needs to be a number";
-        }
-
-        paradigms.map(((paradigm, index) => {
-            if (paradigm.name === formData.name) {
+        animals.map(((animal, index) => {
+            if (animal.name === formData.name) {
                 errors.name = "Can't use the same name twice";
             }  
         }));
+    
+        // // Check if password is empty
+        // if (!formData.animalsNumber) {
+        //   errors.animalsNumber = "Number is required";
+        // }
+
+        // if (!checkString(formData.animalsNumber)) {
+        //     errors.animalsNumber = "Input needs to be a number";
+        // }
     
         setFormData((prevState) => ({ ...prevState, errors }));
     
@@ -76,7 +76,6 @@ const CreateParadigm = () => {
           console.log(formData);
           const data = { name: formData.name, animalsNumber: formData.animalsNumber }; // Object with key "name" and value "path"
           console.log("Data is: ", data);
-
         //   const options_folder = {
         //     method: 'POST',
         //     headers: {
@@ -85,7 +84,7 @@ const CreateParadigm = () => {
         //     body: JSON.stringify(data)
         // };
         try {
-            await Axios.post('http://localhost:5555/paradigms', data);
+            await Axios.post('http://localhost:5555/animals', data);
             // If the request succeeds, navigate to the home page
             navigateToHome();
         } catch (error) {
@@ -110,26 +109,13 @@ const CreateParadigm = () => {
                 <h4>Please fill the fields below: </h4>
                 <hr></hr>
                 <div className="my-3">
-                <label className="sr-only my-3" htmlFor="name">Name of paradigm: </label>
+                <label className="sr-only my-3" htmlFor="name">Name of animal: </label>
                 <input type="text" className="form-control" name="name" id="name" 
                     value={formData.name} onChange = {handleChange} placeholder="Name with letters and digits"></input>
                     
                 </div>
                 {formData.errors.name && (
                     <p style={{ color: "#D37676" }}>{formData.errors.name}</p> )}
-                <div className="my-5">
-                <label className="sr-only my-3" htmlFor="animalsNumber">Number of animals: </label>
-                <div className="input-group">
-                    <div className="input-group-prepend">
-                    <div className="input-group-text">#</div>
-                    </div>
-                    <input type="text" className="form-control" name="animalsNumber" id="animalsNumber"
-                        value={formData.animalsNumber} onChange = {handleChange} placeholder="Number, for example 3"></input>
-                        
-                </div>
-                {formData.errors.animalsNumber && (
-                        <p className="my-3" style={{ color: "#D37676" }}>{formData.errors.animalsNumber}</p>)}
-                </div>
                 
                 {/* <div class="col-auto my-1">
                 <div class="form-check">
@@ -160,4 +146,4 @@ const CreateParadigm = () => {
     )
 }
 
-export default CreateParadigm
+export default CreateAnimal

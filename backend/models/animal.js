@@ -43,11 +43,12 @@ export const animalSchema = new mongoose.Schema(
         //     type: Boolean,
         //     required: [true, 'Either "true" or "false"']
         // },
-        paradigm: {
-            type: ObjectId,
-            ref: "Paradigm",
-            required: [true, 'Animal must have a paradigm']
-        }},
+        // paradigm: {
+        //     type: ObjectId,
+        //     ref: "Paradigm",
+        //     required: [true, 'Animal must have a paradigm']
+        //}
+        },
         {
             timmstamps: true,
         }

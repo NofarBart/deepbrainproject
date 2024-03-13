@@ -37,6 +37,11 @@ const Home = () => {
     navigate('/createParadigm', {replace: true});
   };
 
+  const navigateToCreateAnimal = () => {
+    // 👇️ navigate to /contacts
+    navigate('/createAnimal', {replace: true});
+  };
+
   paradigms.map(((paradigm, index) => {
     if (index === 0 && paradigm_name == null) {
         paradigm_name = null; 
@@ -243,6 +248,7 @@ animals.map(((animal, index) => {
                 </option>
                 })} 
             </select>
+            <Button className='btn btn-outline-success' variant='light' size="lg" onClick={navigateToCreateAnimal}>add</Button>
           </div>
           <div className="alert alert-success text-wrapper-5" role="alert">
             <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>
