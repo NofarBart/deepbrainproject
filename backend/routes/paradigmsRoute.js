@@ -29,20 +29,16 @@ import { Paradigm } from '../models/paradigm.js';
 
 paradigmRouter.post('/', async (req, res) => {
     try {
-        if (
-            !req.body.name ||
-            !req.body.animalsNumber ||
-            !req.body.bodyParts
-        ) {
+        const { name, animalsNumber } = req.body;
+        if (!name || !animalsNumber) {
             return res.status(400).send({
-                message: 'Send all required fields: name, animalsNumber, bodyParts',
-            })
+                message: 'Send all required fields: name, animalsNumber',
+            });
         }
         const newParadigm = {
-            name: req.body.name,
-            // dateStarted: new Date(),
-            animalsNumber: req.body.animalsNumber,
-            bodyParts: req.body.bodyParts,
+            name: name,
+            animalsNumber: animalsNumber,
+            // bodyParts: req.body.bodyParts,
         };
         const paradigm = await Paradigm.create(newParadigm);
         return res.status(201).send(paradigm);

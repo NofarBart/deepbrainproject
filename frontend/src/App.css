@@ -177,7 +177,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 406px;
+  left: 398px;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
@@ -199,15 +199,16 @@
 }
 
 .index .text-wrapper-9 {
-  color: #291b25;
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
+  letter-spacing: 1;
+  left: 398px;
   letter-spacing: 0;
   line-height: normal;
-  margin-top: -1px;
-  position: relative;
-  width: fit-content;
+  position: absolute;
+  top: 10%;
+  width: 30%;
 }
 
 .index .frame-3 {

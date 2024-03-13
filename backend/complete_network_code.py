@@ -40,7 +40,7 @@ deeplabcut.analyze_videos(config,[video_path], videotype=VideoType)
 print("start labeling videos...")
 deeplabcut.create_labeled_video(config,[video_path])
 print("start plotting...")
-deeplabcut.plot_trajectories(config,[video_path],showfigures=True, videotype=VideoType)
+deeplabcut.plot_trajectories(config,[video_path],showfigures=False, videotype=VideoType)
 
 # deeplabcut.create_labeled_video(config, [video_path], videotype='.mp4', trailpoints=10, save_frames = True)
 
