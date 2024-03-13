@@ -112,18 +112,36 @@ paradigmRouter.put('/:id', async (req, res) => {
 
 //route for delete a paradigm in database
 
-paradigmRouter.delete('/:id', async (req, res) => {
+// paradigmRouter.delete('/:id', async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const result = await Paradigm.findByIdAndDelete(id, req.body);
+//         if (!result) {
+//             return res.status(404).send({
+//                 message: 'Paradigm not found',
+//             })
+//         }
+//         return res.status(200).send({
+//             message: 'Paradigm deleted successfully',
+//         })
+//     } catch (error) {
+//         console.log(error.message);
+//         res.status(500).send({ message: error.message });
+//     }
+// });
+
+paradigmRouter.delete('/:name', async (req, res) => {
     try {
-        const { id } = req.params;
-        const result = await Paradigm.findByIdAndDelete(id, req.body);
+        const { name } = req.params; // Extract name from req.params
+        const result = await Paradigm.findOneAndDelete({ name: name });
         if (!result) {
             return res.status(404).send({
                 message: 'Paradigm not found',
-            })
+            });
         }
         return res.status(200).send({
             message: 'Paradigm deleted successfully',
-        })
+        });
     } catch (error) {
         console.log(error.message);
         res.status(500).send({ message: error.message });

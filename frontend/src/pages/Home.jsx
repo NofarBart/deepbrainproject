@@ -37,6 +37,11 @@ const Home = () => {
     navigate('/createParadigm', {replace: true});
   };
 
+  const navigateToDeleteParadigm = () => {
+    // 👇️ navigate to /contacts
+    navigate('/deleteParadigm', {replace: true});
+  };
+
   const navigateToCreateAnimal = () => {
     // 👇️ navigate to /contacts
     navigate('/createAnimal', {replace: true});
@@ -228,6 +233,7 @@ animals.map(((animal, index) => {
                 })} 
             </select>
             <Button className='btn btn-outline-success' variant='light' size="lg" onClick={navigateToCreateParadigm}>add</Button>
+            <Button className='btn btn-outline-danger' variant='light' size="lg" onClick={navigateToDeleteParadigm}>delete</Button>
            
             {/* <Router>
                 <div>

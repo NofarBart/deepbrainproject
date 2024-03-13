@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './pages/home.jsx';
 import CreateParadigm from './pages/createParadigm.jsx';
 import CreateAnimal from './pages/createAnimal.jsx';
+import DeleteParadigm from './pages/deleteParadigm.jsx';
 import {Routes, Route, useNavigate} from 'react-router-dom';
 // import Spinner from 'react-bootstrap/Spinner';
 // import Button from 'react-bootstrap/Button';
@@ -201,6 +202,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/createParadigm" element={<CreateParadigm />} />
         <Route path="/createAnimal" element={<CreateAnimal />} />
+        <Route path="/deleteParadigm" element={<DeleteParadigm />} />
       </Routes>
     </div>
 //     <div className="index">
