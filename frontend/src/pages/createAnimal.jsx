@@ -78,13 +78,6 @@ const CreateAnimal = () => {
           console.log(formData);
           const data = { name: formData.name, animalsNumber: formData.animalsNumber }; // Object with key "name" and value "path"
           console.log("Data is: ", data);
-        //   const options_folder = {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(data)
-        // };
         try {
             await Axios.post('http://localhost:5555/animals', data);
             // If the request succeeds, navigate to the home page

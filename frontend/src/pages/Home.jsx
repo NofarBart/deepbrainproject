@@ -2,13 +2,8 @@ import '../App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
-import { Link } from 'react-router-dom';
-import {Routes, Route, useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare } from "react-icons/vsc";
-// import { BsStop } from "react-icons/bs";
-// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import CreateParadigm from './createParadigm';
-// import React from 'react';
 
 
 import React, { useEffect, useState } from "react";
@@ -22,7 +17,6 @@ let paradigm_name;
 let animal_name;
 
 const Home = () => {
-// const [count, setCount] = useState(0)
   // will update list as database updates on refreshing the site
   const [paradigms, setParadigms] = useState([])
   const [animals, setAnimals] = useState([])
@@ -30,7 +24,6 @@ const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [output, setOutput] = useState('');
   const [selectedDirectory, setSelectedDirectory] = useState('C:\\\\');
-  // const [progress, setProgress] = useState(0); // State to track progress
   const [percentage, setPercentage] = useState(null);
 
   const navigate = useNavigate();
@@ -198,16 +191,9 @@ animals.map(((animal, index) => {
 
           Axios.post('http://localhost:5555/run-python-script', options)
           .then(response => {
-            // if (response.status === 404) {
-            //   setOutput('Resource not found'); // Handle 404 error from the backend
-            // } else if (!response.ok) {
-            //   setOutput('Failed to fetch data'); // Handle other non-OK responses
-            // }
             // Handle successful response
             if (response.data.exitCode == zero) {
               setOutput('Analysis completed successfully')
-              // setOutput(prevOutput => prevOutput + response.data.exitCode);
-              // document.getElementById('spinner').style.display = "none"
             }
             else {
               setOutput('Analysis failed, restart the session... ')
@@ -216,13 +202,6 @@ animals.map(((animal, index) => {
             document.getElementById("python").innerHTML = "";
           })
           .catch (error => {
-            // if (Axios.isCancel(error)) {
-            //   console.log('Request canceled:', error.message);
-            // } else {
-            //   // Handle other errors
-            //   console.error('Error fetching data:', error);
-            // }
-            // document.getElementById('spinner').style.display = "none"
             if (error.response && error.response.status === 404) {
               setOutput('Resource error: ' + error.response.data.message); // Handle 404 error from the backend
             } else if (!error.ok) {
