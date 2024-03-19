@@ -2,8 +2,11 @@ import '../App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
-import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare } from "react-icons/vsc";
+import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare, VscSend } from "react-icons/vsc";
+import { BsPencil, BsArrowBarLeft} from "react-icons/bs";
 
 
 import React, { useEffect, useState } from "react";
@@ -24,7 +27,18 @@ const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [output, setOutput] = useState('');
   const [selectedDirectory, setSelectedDirectory] = useState('C:\\\\');
-  const [percentage, setPercentage] = useState(null);
+  const [pathInput, setPathInput] = useState(""); // State to hold the input value in the modal
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleSaveChanges = () => {
+    if(pathInput !== "") {
+      setSelectedDirectory(pathInput); // Update selectedDirectory with the input value
+    }
+    handleClose(); // Close the modal after saving changes
+  };
 
   const navigate = useNavigate();
 
@@ -75,8 +89,8 @@ animals.map(((animal, index) => {
 
 
   // Example usage
-  const directoryPath = 'C:\\\\';
-  let path = directoryPath + animal_name + "_" + paradigm_name;
+  // const directoryPath = 'C:\\\\';
+  let path = selectedDirectory + animal_name + "_" + paradigm_name;
   let response;
   let resultSection = null; // Initialize result section to null
 
@@ -102,7 +116,7 @@ animals.map(((animal, index) => {
     setOutput(null)
     document.getElementById("python").innerHTML = "";
     if (animal_name != null && paradigm_name != null) {
-      const path = directoryPath + animal_name + "_" + paradigm_name;
+      const path = selectedDirectory + animal_name + "_" + paradigm_name;
       setSelectedFolder(path);
       console.log("folder is: ",selectedFolder);
   
@@ -131,7 +145,7 @@ animals.map(((animal, index) => {
   
     if (animal_name != null && paradigm_name != null) {
       console.log("Entered if")
-      const path = directoryPath + animal_name + "_" + paradigm_name;
+      const path = selectedDirectory + animal_name + "_" + paradigm_name;
       setSelectedFolder(path);
       console.log("folder is: ",selectedFolder);
   
@@ -164,7 +178,7 @@ animals.map(((animal, index) => {
             return;
           }
           setIsVisible(false);
-          path = directoryPath + animal_name + "_" + paradigm_name;
+          path = selectedDirectory + animal_name + "_" + paradigm_name;
           console.log(path) 
           // setSelectedFolder(null);
           const data_folder = { name: path }; // Object with key "name" and value "path"
@@ -177,7 +191,7 @@ animals.map(((animal, index) => {
         };
           Axios.post('http://localhost:5555/select-folder', options_folder)
             .catch(err => console.log(err))
-          let config_path = 'C:\\Experiment16-Tester16-2024-02-21\\config.yaml'
+          let config_path = selectedDirectory + 'Experiment16-Tester16-2024-02-21\\config.yaml'
           const data = { config: config_path, videos: path }; // Object with key "name" and value "path"
           const options = {
             method: 'POST',
@@ -248,6 +262,39 @@ animals.map(((animal, index) => {
           </div>
           <div className="alert alert-success text-wrapper-6" role="alert">
             <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>
+            <div style={{ display: 'inline-block'}}>
+        {selectedDirectory && (
+          <p style={{ display: 'inline', marginRight: '10px' }}>Relative path is: {selectedDirectory}
+          </p>
+        )} <Button className='btn btn-outline-secondary' variant='light' size="sm" onClick={handleShow}><BsPencil size={16} /></Button>
+        <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Change relative path for videos</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            {/* <Form.Label>Path</Form.Label> */}
+                <Form.Control
+                  type="text"
+                  placeholder="computer://your_new_path"
+                  value={pathInput} // Use pathInput state to bind the input value
+                  onChange={(e) => setPathInput(e.target.value)} // Update pathInput state on input change
+                  autoFocus
+                />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleClose}>
+          <BsArrowBarLeft />
+          </Button>
+          <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleSaveChanges}>
+          <VscSend />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      </div>
           </div>
           <div className="text-wrapper-7">
             <label htmlFor="experimental-paradigm">Experimental Paradigm:</label>
