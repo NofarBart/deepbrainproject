@@ -198,11 +198,6 @@ animals.map(((animal, index) => {
 
           Axios.post('http://localhost:5555/run-python-script', options)
           .then(response => {
-            // if (response.status === 404) {
-            //   setOutput('Resource not found'); // Handle 404 error from the backend
-            // } else if (!response.ok) {
-            //   setOutput('Failed to fetch data'); // Handle other non-OK responses
-            // }
             // Handle successful response
             if (response.data.exitCode == zero) {
               setOutput('Analysis completed successfully')
@@ -210,35 +205,22 @@ animals.map(((animal, index) => {
               // document.getElementById('spinner').style.display = "none"
             }
             else {
-              setOutput('Analysis failed, restart the session... ')
+              setOutput('Analysis failed, restarting the session...')
             }
             document.getElementById('spinner').style.display = "none"
-            document.getElementById("python").innerHTML = "";
           })
           .catch (error => {
-            // if (Axios.isCancel(error)) {
-            //   console.log('Request canceled:', error.message);
-            // } else {
-            //   // Handle other errors
-            //   console.error('Error fetching data:', error);
-            // }
-            // document.getElementById('spinner').style.display = "none"
-            if (error.response && error.response.status === 404) {
-              setOutput('Resource error: ' + error.response.data.message); // Handle 404 error from the backend
-            } else if (!error.ok) {
-              setOutput('Failed to fetch data: ' + error.message); // Handle other non-OK responses
+            if (Axios.isCancel(error)) {
+              console.log('Request canceled:', error.message);
+            } else {
+              // Handle other errors
+              console.error('Error fetching data:', error);
             }
             document.getElementById('spinner').style.display = "none"
-            document.getElementById("python").innerHTML = "";
           });
       
   }
-  catch(error){
-    if (error.status === 404) {
-              setOutput('Resource not found'); // Handle 404 error from the backend
-            } else if (!error.ok) {
-              setOutput('Failed to fetch data'); // Handle other non-OK responses
-            }
+  catch {
   }
 }
   const killPython = async () => {

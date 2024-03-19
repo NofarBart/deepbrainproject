@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import '../App.css'
 import Axios from 'axios';
+import { BsArrowBarLeft } from "react-icons/bs";
+import { VscSend } from "react-icons/vsc";
 
 const CreateParadigm = () => {
     const navigate = useNavigate(); // Initialize useNavigate hook
@@ -105,8 +107,8 @@ const CreateParadigm = () => {
               />
             </div>
           </div>
-          <form id="myForm" onSubmit={handleSubmit}>
-            <div className="form-row align-items-center alert alert-success text-wrapper-9">
+          <form id="myForm"  className="form-row align-items-center alert alert-success text-wrapper-9" onSubmit={handleSubmit}>
+            <div>
                 <h4>Please fill the fields below: </h4>
                 <hr></hr>
                 <div className="my-3">
@@ -141,8 +143,8 @@ const CreateParadigm = () => {
                 </div> */}
                 <div className="my-3">
                 {/* <input type="submit" /> */}
-                <Button className='btn btn-outline-dark' variant='light' size="lg" type='submit' value="submit">Submit</Button>
-                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={navigateToHome}>Cancel</Button>
+                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={navigateToHome}><BsArrowBarLeft /></Button>
+                <Button className='btn btn-outline-dark' variant='light' size="lg" type='submit' value="submit"><VscSend /></Button>
                 </div>
             </div>
             </form>

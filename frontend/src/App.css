@@ -121,7 +121,7 @@
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
-  top: 20%;
+  top: 30%;
   /* width: 361px; */
   padding: 10px;
   width: 30%; /* Set the desired width using viewport units */
@@ -136,21 +136,35 @@
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 30%;
+  top: 40%;
   width: 30%;
 }
 
 .index .text-wrapper-6 {
-  color: #291b25;
-  font-family: "Inter", Helvetica;
-  font-size: 20px;
-  font-weight: 600;
-  left: 400px;
+  left: 398px;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 684px;
-  width: 361px;
+  top: 10%;
+  width: 30%;
+  padding: 10px;
+}
+
+.result-text {
+  /* font-size: 18px; /* Adjust the font size as needed */
+  /* line-height: 1.5; Optional: Adjust the line height for better readability */
+  /* font-family: Arial, sans-serif; Optional: Specify the font family */
+  font-family: "Inter", Helvetica;
+  font-size: 20px;
+  font-weight: 600;
+  color: #291b25;
+}
+
+.text-wrapper-7 label,
+.text-wrapper-4 label {
+  width: 350px; /* Set the width of the labels */
+  text-align: left;
+  margin-right: 10px; /* Adjust margin as needed */
 }
 
 .index .text-wrapper-7 {
@@ -167,7 +181,7 @@
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
-  top: 10%;
+  top: 20%;
   padding: 10px;
   width: 30%; /* Set the desired width using viewport units */
 }
@@ -181,7 +195,7 @@
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 80%;
+  top: 60%;
   width: 30%;
 }
 
@@ -199,14 +213,14 @@
 }
 
 .index .text-wrapper-9 {
-  font-family: "Inter", Helvetica;
+  /* font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  letter-spacing: 1;
+  letter-spacing: 1; */
   left: 398px;
-  letter-spacing: 0;
+  /* letter-spacing: 0;
   line-height: normal;
-  position: absolute;
+  position: absolute; */
   top: 10%;
   width: 30%;
 }
