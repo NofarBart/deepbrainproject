@@ -83,10 +83,14 @@ const DeleteAnimal = () => {
                             </option>
                         ))}
                     </select>
-                    <div className="my-3">
-                        {isVisible && <div className="alert alert-danger" role="alert">Select animal!</div>}
-                        <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={navigateToHome}><BsArrowBarLeft /></Button>
-                        <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleSubmit}><VscSend /></Button>
+                    <div className="my-3 d-flex justify-content-between align-items-center">
+                        <Button className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsArrowBarLeft /></Button>
+                        <Button className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="send" onClick={handleSubmit}><VscSend /></Button>
+                        {isVisible && (
+                            <div className="alert alert-danger position-absolute bottom-0 start-50 translate-middle-x" role="alert">
+                            Select animal!
+                            </div>
+                        )}
                     </div>
                 </div>
                 <img
@@ -101,10 +105,10 @@ const DeleteAnimal = () => {
                 </Modal.Header>
                 <Modal.Body>Are you sure you want to delete {selectedAnimal}?</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="secondary" data-toggle="tooltip" data-placement="top" title="return" onClick={handleClose}>
                         <BsArrowBarLeft />
                     </Button>
-                    <Button variant="danger" onClick={handleDelete}>
+                    <Button variant="danger" data-toggle="tooltip" data-placement="top" title="delete" onClick={handleDelete}>
                         <VscTrash />
                     </Button>
                 </Modal.Footer>

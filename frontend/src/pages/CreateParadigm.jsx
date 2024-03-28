@@ -141,10 +141,10 @@ const CreateParadigm = () => {
                     </label>
                 </div>
                 </div> */}
-                <div className="my-3">
+                <div className="my-3 d-flex justify-content-between align-items-center">
                 {/* <input type="submit" /> */}
-                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={navigateToHome}><BsArrowBarLeft /></Button>
-                <Button className='btn btn-outline-dark' variant='light' size="lg" type='submit' value="submit"><VscSend /></Button>
+                <Button className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsArrowBarLeft /></Button>
+                <Button className='btn btn-outline-dark' variant='light' size="lg" type='submit' value="submit" data-toggle="tooltip" data-placement="top" title="send"><VscSend /></Button>
                 </div>
             </div>
             </form>

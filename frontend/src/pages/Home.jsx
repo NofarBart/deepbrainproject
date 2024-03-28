@@ -18,6 +18,7 @@ const zero = 0
 const one = 1
 let paradigm_name;
 let animal_name;
+let flag_kill = zero;
 
 const Home = () => {
   // will update list as database updates on refreshing the site
@@ -62,11 +63,11 @@ const Home = () => {
     navigate('/deleteAnimal', {replace: true});
   };
 
-  const handleDirectoryChange = (event) => {
-    event.preventDefault(); // Prevent default behavior
-    const directoryPath = event.target.files[0].path;
-    setSelectedDirectory(directoryPath);
-  };
+  // const handleDirectoryChange = (event) => {
+  //   event.preventDefault(); // Prevent default behavior
+  //   const directoryPath = event.target.files[0].path;
+  //   setSelectedDirectory(directoryPath);
+  // };
 
   paradigms.map(((paradigm, index) => {
     if (index === 0 && paradigm_name == null) {
@@ -91,7 +92,7 @@ animals.map(((animal, index) => {
   // Example usage
   // const directoryPath = 'C:\\\\';
   let path = selectedDirectory + animal_name + "_" + paradigm_name;
-  let response;
+  // let response;
   let resultSection = null; // Initialize result section to null
 
   if (!selectedFolder) {
@@ -191,7 +192,7 @@ animals.map(((animal, index) => {
         };
           Axios.post('http://localhost:5555/select-folder', options_folder)
             .catch(err => console.log(err))
-          let config_path = selectedDirectory + 'Experiment16-Tester16-2024-02-21\\config.yaml'
+          let config_path = selectedDirectory + 'Experiment18-Tester18-2024-02-29\\config.yaml'
           const data = { config: config_path, videos: path }; // Object with key "name" and value "path"
           const options = {
             method: 'POST',
@@ -200,20 +201,28 @@ animals.map(((animal, index) => {
             },
             body: JSON.stringify(data)
           };
+          setOutput("")
           document.getElementById("python").innerHTML = "Analyzing video(s)";
           document.getElementById("spinner").style.display = "block"
 
           Axios.post('http://localhost:5555/run-python-script', options)
           .then(response => {
             // Handle successful response
-            if (response.data.exitCode == zero) {
+            if (response.data.exitCode === zero) {
               setOutput('Analysis completed successfully')
+              document.getElementById('spinner').style.display = "none"
+              document.getElementById("python").innerHTML = "";
+            }
+            else if (response.data.exitCode === one && flag_kill === zero) {
+              setOutput('Running a new session... ')
             }
             else {
-              setOutput('Analysis failed, restart the session... ')
+              flag_kill = zero
+              setOutput('Analysis failed, please restart the session... ')
+              document.getElementById('spinner').style.display = "none"
+              document.getElementById("python").innerHTML = "";
             }
-            document.getElementById('spinner').style.display = "none"
-            document.getElementById("python").innerHTML = "";
+            
           })
           .catch (error => {
             if (error.response && error.response.status === 404) {
@@ -239,8 +248,11 @@ animals.map(((animal, index) => {
       .then(response => {
         console.log(response.data.message);
         setIsVisible(false)
+        flag_kill = one
         // setOutput('command output is: ')
-        document.getElementById("python").innerHTML = "";
+        // setOutput('Analysis failed, please restart the session... ')
+        // document.getElementById('spinner').style.display = "none"
+        // document.getElementById("python").innerHTML = "";
       })
       .catch(error => {
         console.error('Error stopping process:', error);
@@ -309,8 +321,8 @@ animals.map(((animal, index) => {
                 <option key={index}>{paradigm.name}</option>
               ))}
             </select>
-            <Button className='btn btn-outline-success' variant='light' size="lg" onClick={navigateToCreateParadigm}><VscAdd /></Button>
-            <Button className='btn btn-outline-danger' variant='light' size="lg" onClick={navigateToDeleteParadigm}><VscChromeMinimize /></Button>
+            <Button className='btn btn-outline-success rounded-circle' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="add" onClick={navigateToCreateParadigm}><VscAdd /></Button>
+            <Button className='btn btn-outline-danger rounded-circle' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteParadigm}><VscChromeMinimize /></Button>
           </div>
           <div className="text-wrapper-4">
             <label htmlFor="subject">Subject:</label>
@@ -326,8 +338,8 @@ animals.map(((animal, index) => {
               ))}
             </select>
             
-            <Button className='btn btn-outline-success' variant='light' size="lg" onClick={navigateToCreateAnimal}><VscAdd /></Button>
-            <Button className='btn btn-outline-danger' variant='light' size="lg" onClick={navigateToDeleteAnimal}><VscChromeMinimize /></Button>
+            <Button className='btn btn-outline-success rounded-circle' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="add" onClick={navigateToCreateAnimal}><VscAdd /></Button>
+            <Button className='btn btn-outline-danger rounded-circle' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteAnimal}><VscChromeMinimize /></Button>
           </div>
           <div className="alert alert-success text-wrapper-5" role="alert">
             {selectedFolder && (
@@ -345,8 +357,8 @@ animals.map(((animal, index) => {
           </div>
           <div className="text-wrapper-8">
             {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
-            <Button variant="dark" size="lg" type='submit' onClick={() => fetchData()}><VscPlay size={28}/></Button>{' '}
-            <Button variant="dark" size="lg" type='submit' onClick={() => killPython()}><VscPrimitiveSquare size={28}/></Button>{' '}
+            <Button variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="run deeplabcut" onClick={() => fetchData()}><VscPlay size={28}/></Button>{' '}
+            <Button variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" onClick={() => killPython()}><VscPrimitiveSquare size={28}/></Button>{' '}
           </div>
         </div>
         <img

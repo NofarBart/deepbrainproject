@@ -74,9 +74,9 @@ app.post('/run-python-script', (req, res) => {
             if (pythonProcess) {
                 // where the killing happens
                 kill(pythonProcess.pid);
-                return res.status(200).json({ message: 'A request is already being processed.' });
-            } else {
-                return res.status(404).json({ message: 'No child process running.' });
+            //     return res.status(200).json({ message: 'A request is already being processed.' });
+            // } else {
+            //     return res.status(404).json({ message: 'No child process running.' });
             }
         }
 
@@ -85,7 +85,7 @@ app.post('/run-python-script', (req, res) => {
         console.log("config is: ", config)
         const path = JSON.parse(req.body.body).videos;
         console.log("path is: ", path)
-        const pythonScriptPath = 'complete_network_code.py';
+        const pythonScriptPath = 'deeplabcut/complete_network_code.py';
 
         let files;
         const videoExtensions = ['.mp4', '.avi', '.mov']; // Add more video file extensions if needed

@@ -117,7 +117,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 398px;
+  left: 20%;
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
@@ -132,7 +132,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600; */
-  left: 398px;
+  left: 20%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
@@ -141,7 +141,7 @@
 }
 
 .index .text-wrapper-6 {
-  left: 398px;
+  left: 20%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
@@ -177,7 +177,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 398px;
+  left: 20%;
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
@@ -191,7 +191,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 398px;
+  left: 20%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
@@ -217,13 +217,17 @@
   font-size: 20px;
   font-weight: 600;
   letter-spacing: 1; */
-  left: 398px;
+  left: 30%;
   /* letter-spacing: 0;
   line-height: normal;
   position: absolute; */
-  top: 10%;
-  width: 30%;
+  top: 5%;
+  width: 40%;
 }
+
+/* .btn-circle {
+  border-radius: 100%;
+} */
 
 .index .frame-3 {
   align-items: center;

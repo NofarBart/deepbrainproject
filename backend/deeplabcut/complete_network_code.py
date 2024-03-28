@@ -37,8 +37,9 @@ h5 = 'C:\Experiment16-Tester16-2024-02-21\\videos\\vid2DLC_resnet50_Experiment16
 
 print("start analyzing videos...")
 deeplabcut.analyze_videos(config,[video_path], videotype=VideoType)
-print("start labeling videos...")
-deeplabcut.create_labeled_video(config,[video_path])
+deeplabcut.create_labeled_video(config, [video_path], videotype='.mp4', trailpoints=5, save_frames = True)
+# print("start labeling videos...")
+# deeplabcut.create_labeled_video(config,[video_path])
 print("start plotting...")
 deeplabcut.plot_trajectories(config,[video_path],showfigures=False, videotype=VideoType)
 
