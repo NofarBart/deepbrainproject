@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
 import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare, VscSend } from "react-icons/vsc";
-import { BsPencil, BsArrowBarLeft} from "react-icons/bs";
+import { BsPencil, BsArrowBarLeft, BsArrowBarDown} from "react-icons/bs";
 
 
 import React, { useEffect, useState } from "react";
@@ -96,7 +96,7 @@ animals.map(((animal, index) => {
   let resultSection = null; // Initialize result section to null
 
   if (!selectedFolder) {
-    resultSection = <p>Result Section:</p>; // Display "Result Section" if folder is not chosen
+    resultSection = <p>Running Section:</p>; // Display "Result Section" if folder is not chosen
   }
 
   const handleSelectChangePara = (event) => {
@@ -262,125 +262,138 @@ animals.map(((animal, index) => {
 
   return (
     
-<div className="index">
-      <div className="div-3">
-        <div className="overlap">
-          <div className="a-mouse-from-th-wrapper">
-            <img
-              className="a-mouse-from-th"
-              alt="A mouse from th"
-              src={require('../images/a-mouse-from-th.png')}
-            />
-          </div>
-          <div className="alert alert-success text-wrapper-6" role="alert">
-            <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>
-            <div style={{ display: 'inline-block'}}>
-        {selectedDirectory && (
-          <p style={{ display: 'inline', marginRight: '10px' }}>Relative path is: {selectedDirectory}
-          </p>
-        )} <Button className='btn btn-outline-secondary' variant='light' size="sm" onClick={handleShow}><BsPencil size={16} /></Button>
-        <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Change relative path for videos</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            {/* <Form.Label>Path</Form.Label> */}
-                <Form.Control
-                  type="text"
-                  placeholder="computer://your_new_path"
-                  value={pathInput} // Use pathInput state to bind the input value
-                  onChange={(e) => setPathInput(e.target.value)} // Update pathInput state on input change
-                  autoFocus
-                />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleClose}>
-          <BsArrowBarLeft />
-          </Button>
-          <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleSaveChanges}>
-          <VscSend />
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      </div>
-          </div>
-          <div className="text-wrapper-7">
-            <label htmlFor="experimental-paradigm">Experimental Paradigm:</label>
-            <select
-              id="experimental-paradigm"
-              className="form-select"
-              style={{ right: '100px', left: '100px' }}
-              onChange={handleSelectChangePara}
-            >
-              <option value="">select paradigm</option>
-              {paradigms.map((paradigm, index) => (
-                <option key={index}>{paradigm.name}</option>
-              ))}
-            </select>
-            <Button className='btn btn-outline-success rounded-circle' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="add" onClick={navigateToCreateParadigm}><VscAdd /></Button>
-            <Button className='btn btn-outline-danger rounded-circle' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteParadigm}><VscChromeMinimize /></Button>
-          </div>
-          <div className="text-wrapper-4">
-            <label htmlFor="subject">Subject:</label>
-            <select
-              id="subject"
-              className="form-select"
-              style={{ right: '100px', left: '100px' }}
-              onChange={handleSelectChangeAni}
-            >
-              <option value="">select animal</option>
-              {animals.map((animal, index) => (
-                <option key={index}>{animal.name}</option>
-              ))}
-            </select>
-            
-            <Button className='btn btn-outline-success rounded-circle' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="add" onClick={navigateToCreateAnimal}><VscAdd /></Button>
-            <Button className='btn btn-outline-danger rounded-circle' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteAnimal}><VscChromeMinimize /></Button>
-          </div>
-          <div className="alert alert-success text-wrapper-5" role="alert">
-            {selectedFolder && (
-              <div>
-                Selected Folder: {selectedFolder}
-                <hr />
-              </div>
-            )}
-            <pre className="result-text">{resultSection}</pre> {/* Display result section */}
-            <p id="python"></p>
-            <Spinner id='spinner' animation="border" role="status"></Spinner>
-            <div>
-              <pre>{output}</pre>
-            </div>
-          </div>
-          <div className="text-wrapper-8">
-            {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
-            <Button variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="run deeplabcut" onClick={() => fetchData()}><VscPlay size={28}/></Button>{' '}
-            <Button variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" onClick={() => killPython()}><VscPrimitiveSquare size={28}/></Button>{' '}
-          </div>
-        </div>
+    <div className="index">
+  <div className="div-3">
+    <div className="overlap">
+      <div className="a-mouse-from-th-wrapper">
         <img
-          className="deepbrain-logo"
-          alt="Deepbrain logo"
-          src={require('../images/deepbrain-logo.jpg')}
+          className="a-mouse-from-th"
+          alt="A mouse from th"
+          src={require('../images/a-mouse-from-th.png')}
         />
       </div>
-      {/* Directory Selection */}
-      {/* <div className="directory-selection-wrapper">
-        <div className="text-wrapper-9">
-        <input
-                id="directoryInput"
-                type="text"
-                value={selectedDirectory}
-                onChange={(e) => setSelectedDirectory(e.target.value)}
-                style={{ width: "300px" }} // Set the width to adjust the size
-        ></input>
-          {selectedDirectory && <p>Selected Directory: {selectedDirectory}</p>}
+      <div className="text-wrapper-10" style={{ backgroundColor: 'rgba(49, 63, 71, 0.3)' }}>
+        <div className="alert alert-success text-wrapper-6" role="alert" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+          <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>
+          <div style={{ display: 'inline-block' }}>
+            {selectedDirectory && (
+              <p style={{ display: 'inline', marginRight: '10px' }}>Relative path is: {selectedDirectory}</p>
+            )}
+            <Button className='btn btn-outline-secondary' variant='light' size="sm" onClick={handleShow}><BsPencil size={16} /></Button>
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Change relative path for videos</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    <Form.Control
+                      type="text"
+                      placeholder="computer://your_new_path"
+                      value={pathInput}
+                      onChange={(e) => setPathInput(e.target.value)}
+                      autoFocus
+                    />
+                  </Form.Group>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleClose}><BsArrowBarLeft /></Button>
+                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleSaveChanges}><VscSend /></Button>
+              </Modal.Footer>
+            </Modal>
+          </div>
         </div>
-      </div> */}
+        <div className="text-wrapper-7" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+          <label htmlFor="experimental-paradigm">Experimental Paradigm:</label>
+          <select
+            id="experimental-paradigm"
+            className="form-select"
+            style={{ right: '100px', left: '100px' }}
+            onChange={handleSelectChangePara}
+          >
+            <option value="">select paradigm</option>
+            {paradigms.map((paradigm, index) => (
+              <option key={index}>{paradigm.name}</option>
+            ))}
+          </select>
+          <div className="btn-group btn-group-toggle" data-toggle="buttons">
+            <Button name="options" id="option1" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="add" onClick={navigateToCreateParadigm}><VscAdd /></Button>
+            <Button name="options" id="option2" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteParadigm}><VscChromeMinimize /></Button>
+          </div>
+        </div>
+        <div className="text-wrapper-4" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+          <label htmlFor="subject">Subject:</label>
+          <select
+            id="subject"
+            className="form-select"
+            style={{ right: '100px', left: '100px' }}
+            onChange={handleSelectChangeAni}
+          >
+            <option value="">select animal</option>
+            {animals.map((animal, index) => (
+              <option key={index}>{animal.name}</option>
+            ))}
+          </select>
+          <div className="btn-group btn-group-toggle" data-toggle="buttons">
+            <Button name="options" id="option1" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="add" onClick={navigateToCreateAnimal}><VscAdd /></Button>
+            <Button name="options" id="option2" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteAnimal}><VscChromeMinimize /></Button>
+          </div>
+        </div>
+        <div className="alert alert-success text-wrapper-5" role="alert" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+          {selectedFolder && (
+            <div>
+              Selected Folder: {selectedFolder}
+              <hr />
+            </div>
+          )}
+          <pre className="result-text">{resultSection}</pre>
+          <p id="python"></p>
+          <Spinner id='spinner' animation="border" role="status"></Spinner>
+          <div>
+            <pre>{output}</pre>
+          </div>
+        </div>
+        {/* <div className="alert alert-success text-wrapper-10" role="alert"></div> */}
+        <div className="text-wrapper-8">
+          {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
+          <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{ left: '40%' }}>
+            {/* <label class="btn btn-dark"> */}
+                <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()}><VscPlay size={20}/></Button>
+              {/* <input type="radio" name="options" id="option1" autocomplete="off" checked> Active </input> */}
+            {/* </label> */}
+            {/* <label class="btn btn-dark"> */}
+            <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()}><VscPrimitiveSquare size={20}/></Button>
+            <Button className='btn btn-outline-light' name="options" id="option3" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => killPython()}><BsArrowBarDown size={20}/></Button>
+            {/* </label> */}
+            {/* <label class="btn btn-secondary">
+              <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>
+            </label> */}
+          </div>
+        </div>
+      </div>
     </div>
+    <img
+      className="deepbrain-logo"
+      alt="Deepbrain logo"
+      src={require('../images/deepbrain-logo.jpg')}
+    />
+  </div>
+  {/* Directory Selection */}
+  {/* <div className="directory-selection-wrapper">
+    <div className="text-wrapper-9">
+      <input
+        id="directoryInput"
+        type="text"
+        value={selectedDirectory}
+        onChange={(e) => setSelectedDirectory(e.target.value)}
+        style={{ width: "300px" }}
+      />
+      {selectedDirectory && <p>Selected Directory: {selectedDirectory}</p>}
+    </div>
+  </div> */}
+</div>
+
     
   );
 }

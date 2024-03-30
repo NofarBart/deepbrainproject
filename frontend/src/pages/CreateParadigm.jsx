@@ -107,47 +107,49 @@ const CreateParadigm = () => {
               />
             </div>
           </div>
-          <form id="myForm"  className="form-row align-items-center alert alert-success text-wrapper-9" onSubmit={handleSubmit}>
-            <div>
-                <h4>Please fill the fields below: </h4>
-                <hr></hr>
-                <div className="my-3">
-                <label className="sr-only my-3" htmlFor="name">Name of paradigm: </label>
-                <input type="text" className="form-control" name="name" id="name" 
-                    value={formData.name} onChange = {handleChange} placeholder="Name with letters and digits"></input>
-                    
-                </div>
-                {formData.errors.name && (
-                    <p style={{ color: "#D37676" }}>{formData.errors.name}</p> )}
-                <div className="my-5">
-                <label className="sr-only my-3" htmlFor="animalsNumber">Number of animals: </label>
-                <div className="input-group">
-                    <div className="input-group-prepend">
-                    <div className="input-group-text">#</div>
-                    </div>
-                    <input type="text" className="form-control" name="animalsNumber" id="animalsNumber"
-                        value={formData.animalsNumber} onChange = {handleChange} placeholder="Number, for example 3"></input>
-                        
-                </div>
-                {formData.errors.animalsNumber && (
-                        <p className="my-3" style={{ color: "#D37676" }}>{formData.errors.animalsNumber}</p>)}
-                </div>
-                
-                {/* <div class="col-auto my-1">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="autoSizingCheck2"></input>
-                    <label class="form-check-label" for="autoSizingCheck2">
-                    Remember me
-                    </label>
-                </div>
-                </div> */}
-                <div className="my-3 d-flex justify-content-between align-items-center">
-                {/* <input type="submit" /> */}
-                <Button className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsArrowBarLeft /></Button>
-                <Button className='btn btn-outline-dark' variant='light' size="lg" type='submit' value="submit" data-toggle="tooltip" data-placement="top" title="send"><VscSend /></Button>
-                </div>
-            </div>
-            </form>
+          {/* <div className="text-wrapper-10" style={{ backgroundColor: 'rgba(49, 63, 71, 0.3)' }}> */}
+            <form id="myForm"  className="form-row align-items-center alert alert-success text-wrapper-9" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }} onSubmit={handleSubmit}>
+              <div>
+                  <h4>Please fill the fields below: </h4>
+                  <hr></hr>
+                  <div className="my-3">
+                  <label className="sr-only my-3" htmlFor="name">Name of paradigm: </label>
+                  <input type="text" className="form-control" name="name" id="name" 
+                      value={formData.name} onChange = {handleChange} placeholder="Name with letters and digits"></input>
+                      
+                  </div>
+                  {formData.errors.name && (
+                      <p style={{ color: "#D37676" }}>{formData.errors.name}</p> )}
+                  <div className="my-5">
+                  <label className="sr-only my-3" htmlFor="animalsNumber">Number of animals: </label>
+                  <div className="input-group">
+                      <div className="input-group-prepend">
+                      <div className="input-group-text">#</div>
+                      </div>
+                      <input type="text" className="form-control" name="animalsNumber" id="animalsNumber"
+                          value={formData.animalsNumber} onChange = {handleChange} placeholder="Number, for example 3"></input>
+                          
+                  </div>
+                  {formData.errors.animalsNumber && (
+                          <p className="my-3" style={{ color: "#D37676" }}>{formData.errors.animalsNumber}</p>)}
+                  </div>
+                  
+                  {/* <div class="col-auto my-1">
+                  <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="autoSizingCheck2"></input>
+                      <label class="form-check-label" for="autoSizingCheck2">
+                      Remember me
+                      </label>
+                  </div>
+                  </div> */}
+                  <div className="my-3 d-flex justify-content-between align-items-center">
+                  {/* <input type="submit" /> */}
+                  <Button className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsArrowBarLeft /></Button>
+                  <Button className='btn btn-outline-dark' variant='light' size="lg" type='submit' value="submit" data-toggle="tooltip" data-placement="top" title="send"><VscSend /></Button>
+                  </div>
+              </div>
+              </form>
+            {/* </div> */}
           <img
             className="deepbrain-logo"
             alt="Deepbrain logo"

@@ -106,10 +106,14 @@
   top: 411px !important;
 }
 
+/* body {
+  display: inline;
+} */
+
 .index .text-wrapper-4 {
   color: #291b25;
   background-color: #c7ddcc;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* border-width: 40; */
   display:inline-flex;
   gap: 25px;
@@ -117,14 +121,14 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 20%;
+  left: 25%;
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
   top: 30%;
   /* width: 361px; */
   padding: 10px;
-  width: 30%; /* Set the desired width using viewport units */
+  width: 40%; /* Set the desired width using viewport units */
 }
 
 .index .text-wrapper-5 {
@@ -132,21 +136,44 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600; */
-  left: 20%;
+  left: 25%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
   top: 40%;
-  width: 30%;
+  width: 40%;
+}
+
+.index .text-wrapper-10 {
+  height: 63%;
+  margin-left: 25%;
+  margin-top: 5%;
+  width: 40%;
+  background-color: #291b25;
+  border-radius: 10px;
+  /* position: absolute; */
+  /* top: 931px; */
+  /* color: #291b25;
+  font-family: "Inter", Helvetica;
+  font-size: 20px;
+  font-weight: 600; */
+  /* left: 25%;
+  letter-spacing: 0;
+  line-height: normal;
+  position:relative;
+  display:inline-flex;
+  width: 40%;
+  height: 50%; */
+  /* width: 60%; */
 }
 
 .index .text-wrapper-6 {
-  left: 20%;
+  left: 25%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
   top: 5%;
-  width: 30%;
+  width: 40%;
   padding: 10px;
 }
 
@@ -170,20 +197,20 @@
 .index .text-wrapper-7 {
   color: #291b25;
   background-color: #c7ddcc;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   display: inline-flex;
   gap: 25px;
   justify-content: center;
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 20%;
+  left: 25%;
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
   top: 20%;
   padding: 10px;
-  width: 30%; /* Set the desired width using viewport units */
+  width: 40%; /* Set the desired width using viewport units */
 }
 
 .index .text-wrapper-8 {
@@ -191,18 +218,18 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 20%;
+  left: 25%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
   top: 60%;
-  width: 30%;
+  width: 40%;
 }
 
 .index .frame-2 {
   align-items: center;
   background-color: #c7ddcc;
-  border-radius: 15px;
+  /* border-radius: 15px; */
   display: inline-flex;
   gap: 10px;
   justify-content: center;
@@ -217,7 +244,11 @@
   font-size: 20px;
   font-weight: 600;
   letter-spacing: 1; */
+  height: 40%;
   left: 30%;
+  letter-spacing: 1;
+  line-height: normal;
+  position: absolute;
   /* letter-spacing: 0;
   line-height: normal;
   position: absolute; */
@@ -232,7 +263,7 @@
 .index .frame-3 {
   align-items: center;
   background-color: #c7ddcc;
-  border-radius: 15px;
+  /* border-radius: 15px; */
   display: inline-flex;
   gap: 10px;
   justify-content: center;
@@ -263,7 +294,7 @@
 .index .frame-4 {
   align-items: center;
   background-color: #c7ddcc;
-  border-radius: 15px;
+  /* border-radius: 15px; */
   display: inline-flex;
   gap: 10px;
   justify-content: center;
