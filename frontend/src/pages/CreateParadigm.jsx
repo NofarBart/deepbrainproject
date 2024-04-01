@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import '../App.css'
 import Axios from 'axios';
-import { BsArrowBarLeft } from "react-icons/bs";
+import { BsBoxArrowInLeft } from "react-icons/bs";
 import { VscSend } from "react-icons/vsc";
 
 const CreateParadigm = () => {
@@ -62,7 +62,8 @@ const CreateParadigm = () => {
         paradigms.map(((paradigm, index) => {
             if (paradigm.name === formData.name) {
                 errors.name = "Can't use the same name twice";
-            }  
+            }
+            return paradigm;
         }));
     
         setFormData((prevState) => ({ ...prevState, errors }));
@@ -144,7 +145,7 @@ const CreateParadigm = () => {
                   </div> */}
                   <div className="my-3 d-flex justify-content-between align-items-center">
                   {/* <input type="submit" /> */}
-                  <Button className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsArrowBarLeft /></Button>
+                  <Button className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsBoxArrowInLeft /></Button>
                   <Button className='btn btn-outline-dark' variant='light' size="lg" type='submit' value="submit" data-toggle="tooltip" data-placement="top" title="send"><VscSend /></Button>
                   </div>
               </div>

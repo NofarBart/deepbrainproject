@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal'; // Import Modal from react-bootstrap
 import '../App.css';
 import Axios from 'axios';
 import { VscTrash, VscSend } from "react-icons/vsc";
-import { BsArrowBarLeft } from "react-icons/bs";
+import { BsBoxArrowInLeft } from "react-icons/bs";
 
 const DeleteParadigm = () => {
     const navigate = useNavigate();
@@ -76,7 +76,7 @@ const DeleteParadigm = () => {
                         ))}
                     </select>
                     <div className="my-3 d-flex justify-content-between align-items-center">
-                        <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsArrowBarLeft /></Button>
+                        <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsBoxArrowInLeft /></Button>
                         <Button className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="send" onClick={handleSubmit}><VscSend /></Button>
                         {isVisible && (
                             <div className="alert alert-danger position-absolute bottom-0 start-50 translate-middle-x" role="alert">
@@ -100,7 +100,7 @@ const DeleteParadigm = () => {
                 <Modal.Body>Are you sure you want to delete {selectedParadigm}?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" data-toggle="tooltip" data-placement="top" title="return" onClick={handleClose}>
-                        <BsArrowBarLeft />
+                        <BsBoxArrowInLeft />
                     </Button>
                     <Button variant="danger" data-toggle="tooltip" data-placement="top" title="delete" onClick={handleDelete}>
                         <VscTrash />
