@@ -96,7 +96,7 @@ const CreateAnimal = () => {
               />
             </div>
           </div>
-          <form id="myForm"  className="form-row align-items-center alert alert-success text-wrapper-9" onSubmit={handleSubmit}>
+          <form id="myForm"  className="form-row align-items-center alert alert-success text-wrapper-9" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }} onSubmit={handleSubmit}>
             <div>
                 <h4>Please fill the fields below: </h4>
                 <hr></hr>

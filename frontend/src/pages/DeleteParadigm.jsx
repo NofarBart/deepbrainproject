@@ -66,7 +66,7 @@ const DeleteParadigm = () => {
                         />
                     </div>
                 </div>
-                <div className="form-row align-items-center alert alert-success text-wrapper-9">
+                <div className="form-row align-items-center alert alert-success text-wrapper-9" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
                     <h4>Please fill the fields below: </h4>
                     <hr />
                     <select className="form-select" onChange={handleSelectChangePara}>

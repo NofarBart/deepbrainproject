@@ -5,8 +5,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
-import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare, VscSend } from "react-icons/vsc";
-import { BsPencil, BsArrowBarLeft, BsArrowBarDown} from "react-icons/bs";
+import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare, VscSend, VscGraph, VscGraphLine } from "react-icons/vsc";
+import { BsPencil, BsArrowBarLeft} from "react-icons/bs";
 
 
 import React, { useEffect, useState } from "react";
@@ -91,7 +91,7 @@ animals.map(((animal, index) => {
 
   // Example usage
   // const directoryPath = 'C:\\\\';
-  let path = selectedDirectory + animal_name + "_" + paradigm_name;
+  let path = selectedDirectory + animal_name + "\\" + paradigm_name;
   // let response;
   let resultSection = null; // Initialize result section to null
 
@@ -117,7 +117,7 @@ animals.map(((animal, index) => {
     setOutput(null)
     document.getElementById("python").innerHTML = "";
     if (animal_name != null && paradigm_name != null) {
-      const path = selectedDirectory + animal_name + "_" + paradigm_name;
+      const path = selectedDirectory + animal_name + "\\" + paradigm_name;
       setSelectedFolder(path);
       console.log("folder is: ",selectedFolder);
   
@@ -146,7 +146,7 @@ animals.map(((animal, index) => {
   
     if (animal_name != null && paradigm_name != null) {
       console.log("Entered if")
-      const path = selectedDirectory + animal_name + "_" + paradigm_name;
+      const path = selectedDirectory + animal_name + "\\" + paradigm_name;
       setSelectedFolder(path);
       console.log("folder is: ",selectedFolder);
   
@@ -179,7 +179,7 @@ animals.map(((animal, index) => {
             return;
           }
           setIsVisible(false);
-          path = selectedDirectory + animal_name + "_" + paradigm_name;
+          path = selectedDirectory + animal_name + "\\" + paradigm_name;
           console.log(path) 
           // setSelectedFolder(null);
           const data_folder = { name: path }; // Object with key "name" and value "path"
@@ -205,7 +205,7 @@ animals.map(((animal, index) => {
           document.getElementById("python").innerHTML = "Analyzing video(s)";
           document.getElementById("spinner").style.display = "block"
 
-          Axios.post('http://localhost:5555/run-python-script', options)
+          Axios.post('http://localhost:5555/python/run-python-script', options)
           .then(response => {
             // Handle successful response
             if (response.data.exitCode === zero) {
@@ -244,7 +244,7 @@ animals.map(((animal, index) => {
   }
 }
   const killPython = async () => {
-    Axios.post('http://localhost:5555/stop-process')
+    Axios.post('http://localhost:5555/python/stop-process')
       .then(response => {
         console.log(response.data.message);
         setIsVisible(false)
@@ -258,7 +258,54 @@ animals.map(((animal, index) => {
         console.error('Error stopping process:', error);
       });
   }
+  
+  /**
+ * @todo Check the networkerror that happens if i try to send a non existing file and than existing
+ * @todo Implement this function.
+ */
 
+  const createCSV = async () => {
+    path = selectedDirectory + animal_name + "\\" + paradigm_name;
+          console.log(path) 
+          // setSelectedFolder(null);
+          const data_folder = { name: path }; // Object with key "name" and value "path"
+          const options_folder = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data_folder)
+        };
+    setOutput("")
+    document.getElementById("python").innerHTML = "Creating csv (excel) files";
+    document.getElementById("spinner").style.display = "block"
+    Axios.post('http://localhost:5555/python/create-csv', options_folder)
+      .then(response => {
+        if (response.data.exitCode === zero) {
+          setOutput('Files created successfully')
+          document.getElementById('spinner').style.display = "none"
+          document.getElementById("python").innerHTML = "";
+        }
+        else if (response.data.exitCode === one) {
+          setOutput('Running a new session... ')
+        }
+        // flag_kill = one
+        // setOutput('command output is: ')
+        // setOutput('Analysis failed, please restart the session... ')
+        // document.getElementById('spinner').style.display = "none"
+        // document.getElementById("python").innerHTML = "";
+      })
+      .catch (error => {
+        if (error.response && error.response.status === 404) {
+          setOutput('Resource error: ' + error.response.data.message); // Handle 404 error from the backend
+        } else if (!error.ok) {
+          setOutput('Failed to fetch data: ' + error.message); // Handle other non-OK responses
+        }
+        document.getElementById('spinner').style.display = "none"
+        document.getElementById("python").innerHTML = "";
+      });
+      // flag_kill = zero
+  }
 
   return (
     
@@ -364,7 +411,8 @@ animals.map(((animal, index) => {
             {/* </label> */}
             {/* <label class="btn btn-dark"> */}
             <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()}><VscPrimitiveSquare size={20}/></Button>
-            <Button className='btn btn-outline-light' name="options" id="option3" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => killPython()}><BsArrowBarDown size={20}/></Button>
+            <Button className='btn btn-outline-light' name="options" id="option3" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => createCSV()}><VscGraph size={20}/></Button>
+            <Button className='btn btn-outline-light' name="options" id="option4" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => createCSV()}><VscGraphLine size={20}/></Button>
             {/* </label> */}
             {/* <label class="btn btn-secondary">
               <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>

@@ -121,7 +121,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 25%;
+  left: 30%;
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
@@ -136,7 +136,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600; */
-  left: 25%;
+  left: 30%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
@@ -146,7 +146,7 @@
 
 .index .text-wrapper-10 {
   height: 63%;
-  margin-left: 25%;
+  margin-left: 30%;
   margin-top: 5%;
   width: 40%;
   background-color: #291b25;
@@ -168,7 +168,7 @@
 }
 
 .index .text-wrapper-6 {
-  left: 25%;
+  left: 30%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
@@ -204,7 +204,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 25%;
+  left: 30%;
   letter-spacing: 1;
   line-height: normal;
   position: absolute;
@@ -218,7 +218,7 @@
   font-family: "Inter", Helvetica;
   font-size: 20px;
   font-weight: 600;
-  left: 25%;
+  left: 30%;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
@@ -244,9 +244,9 @@
   font-size: 20px;
   font-weight: 600;
   letter-spacing: 1; */
-  height: 40%;
+  /* height: 40%; */
   left: 30%;
-  letter-spacing: 1;
+  letter-spacing: 0;
   line-height: normal;
   position: absolute;
   /* letter-spacing: 0;
