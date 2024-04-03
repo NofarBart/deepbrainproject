@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
 import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare, VscSend, VscGraph, VscGraphLine } from "react-icons/vsc";
-import { BsPencil, BsArrowBarLeft} from "react-icons/bs";
+import { BsPencil, BsBoxArrowInLeft} from "react-icons/bs";
 
 
 import React, { useEffect, useState } from "react";
@@ -26,10 +26,20 @@ const Home = () => {
   const [animals, setAnimals] = useState([])
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [output, setOutput] = useState('');
   const [selectedDirectory, setSelectedDirectory] = useState('C:\\\\');
   const [pathInput, setPathInput] = useState(""); // State to hold the input value in the modal
   const [show, setShow] = useState(false);
+    // State to manage modal visibility and selected radio button
+  const [list, setList] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+
+    // Function to toggle modal visibility
+    const toggleModal = () => {
+        setShowModal(!showModal);
+    };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -39,6 +49,36 @@ const Home = () => {
       setSelectedDirectory(pathInput); // Update selectedDirectory with the input value
     }
     handleClose(); // Close the modal after saving changes
+  };
+
+  const handleSave = () => {
+    if(selectedOption === "") {
+      setIsVisibleModal(true);
+      return;
+    }
+    setIsVisibleModal(false);
+    path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + selectedOption;
+    console.log(path) 
+    // setSelectedFolder(null);
+    // const data_folder = { name: path }; // Object with key "name" and value "path"
+    // const options_folder = {
+    //   method: 'POST',
+    //   headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(data_folder)
+    //   };
+    // Axios.post('http://localhost:5555/select-file-in-folder', options_folder)
+    //   .then(response => {
+    //     setList(response.data)
+    //     console.log(response.data);
+    //     if (response.data.length > zero) {
+    //       toggleModal();
+    //     }
+    //     else {
+    //       setOutput("No analyzed videos found for graph plotting.")
+    //     }
+    toggleModal(); // Close the modal after saving changes
   };
 
   const navigate = useNavigate();
@@ -170,6 +210,12 @@ animals.map(((animal, index) => {
     .catch(err => console.log(err))
 }, []);
 
+// Function to handle radio button change
+const handleRadioChange = (event) => {
+  setSelectedOption(event.target.value);
+  console.log(selectedOption);
+};
+
 
 
   const fetchData = async () => {
@@ -258,6 +304,45 @@ animals.map(((animal, index) => {
         console.error('Error stopping process:', error);
       });
   }
+
+  const getFiles = async () => {
+    path = selectedDirectory + animal_name + "\\" + paradigm_name;
+    console.log(path) 
+    // setSelectedFolder(null);
+    const data_folder = { name: path }; // Object with key "name" and value "path"
+    const options_folder = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data_folder)
+      };
+    Axios.post('http://localhost:5555/select-file-in-folder', options_folder)
+      .then(response => {
+        setList(response.data)
+        console.log(response.data);
+        if (response.data.length > zero) {
+          toggleModal();
+        }
+        else {
+          setOutput("No analyzed videos found for graph plotting.")
+        }
+
+        // setIsVisible(false)
+        // flag_kill = one
+        // setOutput('command output is: ')
+        // setOutput('Analysis failed, please restart the session... ')
+        // document.getElementById('spinner').style.display = "none"
+        // document.getElementById("python").innerHTML = "";
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 404) {
+          setOutput('Resource not found'); // Handle 404 error from the backend
+        } else if (!error.ok) {
+          setOutput('Failed to fetch data'); // Handle other non-OK responses
+        }
+      });
+  }
   
   /**
  * @todo Check the networkerror that happens if i try to send a non existing file and than existing
@@ -344,8 +429,8 @@ animals.map(((animal, index) => {
                   </Form.Group>
                 </Form>
               </Modal.Body>
-              <Modal.Footer>
-                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleClose}><BsArrowBarLeft /></Button>
+              <Modal.Footer className="my-3 d-flex justify-content-between align-items-center">
+                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleClose}><BsBoxArrowInLeft /></Button>
                 <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleSaveChanges}><VscSend /></Button>
               </Modal.Footer>
             </Modal>
@@ -404,6 +489,53 @@ animals.map(((animal, index) => {
         {/* <div className="alert alert-success text-wrapper-10" role="alert"></div> */}
         <div className="text-wrapper-8">
           {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
+          <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{ left: '35%' }}>
+            {/* <label class="btn btn-dark"> */}
+            <Button className='btn btn-outline-light' name="options" id="option3" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => createCSV()}><VscGraph size={20}/></Button>
+            <Button className='btn btn-outline-light' name="options" id="option4" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="create graph" autoComplete="off" onClick={() => getFiles()}><VscGraphLine size={20}/></Button>
+            {/* </label> */}
+            <Modal show={showModal} onHide={toggleModal} size='lg'>
+                <Modal.Header closeButton>
+                    <Modal.Title>Choose videos</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        {list.map((item, index) => (
+                            <Form.Check
+                                key={index}
+                                type="radio"
+                                id={`radio-${index}`}
+                                label={item}
+                                value={item}
+                                checked={selectedOption === item}
+                                onChange={handleRadioChange}
+                            />
+                        ))}
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                {isVisibleModal && <div className="alert alert-danger" role="alert">Choose video to analyze!</div>}
+                <Modal.Footer className="my-3 d-flex justify-content-between align-items-center">
+                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={toggleModal}><BsBoxArrowInLeft /></Button>
+                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleSave}><VscSend /></Button>
+              </Modal.Footer>
+            </Modal>
+            {/* {setShowModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={toggleModal}>&times;</span>
+                        <h2>Select an Option</h2>
+                        
+                        <button onClick={toggleModal}>Close</button>
+                    </div>
+                </div>
+            )} */}
+            
+            {/* <label class="btn btn-secondary">
+              <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>
+            </label> */}
+          </div>
           <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{ left: '40%' }}>
             {/* <label class="btn btn-dark"> */}
                 <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()}><VscPlay size={20}/></Button>
@@ -411,8 +543,6 @@ animals.map(((animal, index) => {
             {/* </label> */}
             {/* <label class="btn btn-dark"> */}
             <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()}><VscPrimitiveSquare size={20}/></Button>
-            <Button className='btn btn-outline-light' name="options" id="option3" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => createCSV()}><VscGraph size={20}/></Button>
-            <Button className='btn btn-outline-light' name="options" id="option4" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => createCSV()}><VscGraphLine size={20}/></Button>
             {/* </label> */}
             {/* <label class="btn btn-secondary">
               <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>

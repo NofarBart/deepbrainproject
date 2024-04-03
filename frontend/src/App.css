@@ -222,6 +222,19 @@
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
+  top: 57.5%;
+  width: 40%;
+}
+
+.index .text-wrapper-11 {
+  color: #291b25;
+  font-family: "Inter", Helvetica;
+  font-size: 20px;
+  font-weight: 600;
+  left: 20%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
   top: 60%;
   width: 40%;
 }
