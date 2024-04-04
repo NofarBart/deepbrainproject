@@ -17,6 +17,7 @@ from matplotlib.pyplot import cm
 import os
 import numpy as np
 import pandas as pd
+import sys
 import cv2
 import time_in_each_roi #the function needs to be in the same folder as the notebook
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
@@ -33,10 +34,10 @@ VideoType = 'mp4'
 
 # Path to the video file
 # video_path = "C:\Experiment16-Tester16-2024-02-21\\videos\\vid2.mp4"
-video_path = "D:\\testing_videos_new\\vid2.mp4"
-config = 'C:\Experiment16-Tester16-2024-02-21\config.yaml'
+# video_path = "D:\\testing_videos_new\\vid2.mp4"
+# config = 'C:\Experiment16-Tester16-2024-02-21\config.yaml'
 # h5 = 'C:\Experiment18-Tester18-2024-02-29\\videos\\vid1DLC_resnet50_Experiment18Feb29shuffle1_20000.h5'
-h5 = 'C:\\current\\Test_Blue_2024-03-27-124054-0000DLC_resnet50_Experiment11Mar25shuffle1_72600.h5'
+h5 = os.path.join(os.getcwd(),sys.argv[ONE])
 
 df, bodyparts, scorer = dlc2kinematics.load_data(h5)
 # # Save df to CSV

@@ -76,6 +76,7 @@ pythonRouter.post('/run-python-script', (req, res) => {
 });
 
 pythonRouter.post('/create-csv', (req, res) => {
+    let output = ''; // Initialize the output variable
     if (isProcessing) {
         // Return an error response indicating that a request is already in progress
         if (pythonProcess) {
@@ -86,7 +87,7 @@ pythonRouter.post('/create-csv', (req, res) => {
 
     const h5Directory = JSON.parse(req.body.body).name;
     const pythonScriptPath = 'deeplabcut/csv_files.py';
-
+    
     // Check if there are .h5 files in the directory
     fs.readdir(h5Directory, (err, files) => {
         if (err) {
@@ -109,6 +110,47 @@ pythonRouter.post('/create-csv', (req, res) => {
         pythonProcess = spawn('python', [pythonScriptPath, h5Directory], { shell: true, stdio: 'pipe' });
 
         pythonProcess.stdout.on('data', (data) => {
+            output += data.toString();
+            console.log('Python script output:', data.toString());
+        });
+
+        pythonProcess.stderr.on('data', (data) => {
+            console.error('Python script error:', data.toString());
+        });
+
+        // Handle process exit
+        pythonProcess.on('exit', (exitCode) => {
+            console.log(`Python script exited with code ${exitCode}`);
+            isProcessing = false;
+            return res.json({ exitCode, output }); // Send the exit code
+        });
+    });
+});
+
+
+pythonRouter.post('/create-plots', (req, res) => {
+    if (isProcessing) {
+        // Return an error response indicating that a request is already in progress
+        if (pythonProcess) {
+            kill(pythonProcess.pid);
+        }
+        return res.status(200).json({ message: 'A request is already being processed.' });
+    }
+
+    const h5File = JSON.parse(req.body.body).name;
+    const pythonScriptPath = 'deeplabcut/analyze.py';
+    
+    if (!fs.existsSync(h5File)) {
+        isProcessing = false;
+        return res.status(404).json({ message: 'No h5 file found.' });
+    }
+        // Set the processing flag to true to indicate that a request is now being processed
+        isProcessing = true;
+
+        // Execute the command using spawn
+        pythonProcess = spawn('python', [pythonScriptPath, h5File], { shell: true, stdio: 'pipe' });
+
+        pythonProcess.stdout.on('data', (data) => {
             console.log('Python script output:', data.toString());
         });
 
@@ -123,7 +165,7 @@ pythonRouter.post('/create-csv', (req, res) => {
             return res.json({ exitCode }); // Send the exit code
         });
     });
-});
+
 
 
 // Endpoint to stop the child process

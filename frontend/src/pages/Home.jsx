@@ -35,6 +35,7 @@ const Home = () => {
   const [list, setList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
     // Function to toggle modal visibility
     const toggleModal = () => {
@@ -59,17 +60,24 @@ const Home = () => {
     setIsVisibleModal(false);
     path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + selectedOption;
     console.log(path) 
+    const withoutLabeled = path.replace(/_labeled\.mp4$/, '.mp4');
+    const parts = withoutLabeled.split('.');
+    const withoutExtension = parts.slice(0, -1).join('.'); // Removes the last part (file extension)
+    const withH5Extension = withoutExtension + '.h5';
+    console.log(withH5Extension); // Output: '/path/to/video.h5'
+
     // setSelectedFolder(null);
-    // const data_folder = { name: path }; // Object with key "name" and value "path"
-    // const options_folder = {
-    //   method: 'POST',
-    //   headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(data_folder)
-    //   };
-    // Axios.post('http://localhost:5555/select-file-in-folder', options_folder)
-    //   .then(response => {
+    const data_folder = { name: withH5Extension }; // Object with key "name" and value "path"
+    const options_folder = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data_folder)
+      };
+    Axios.post('http://localhost:5555/python/create-plots', options_folder)
+      .then(response => {
+      });
     //     setList(response.data)
     //     console.log(response.data);
     //     if (response.data.length > zero) {
@@ -127,6 +135,48 @@ animals.map(((animal, index) => {
   return animal;
 }));
 
+const getFiles = async () => {
+  path = selectedDirectory + animal_name + "\\" + paradigm_name;
+  console.log(path) 
+  // setSelectedFolder(null);
+  const data_folder = { name: path }; // Object with key "name" and value "path"
+  const options_folder = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data_folder)
+    };
+  Axios.post('http://localhost:5555/select-file-in-folder', options_folder)
+    .then(response => {
+      setList(response.data)
+      console.log(response.data);
+      if (response.data.length > zero) {
+        setIsButtonDisabled(false);
+      }
+      else {
+        setIsButtonDisabled(true);
+        setOutput("No analyzed videos found for graph plotting.")
+      }
+
+      // setIsVisible(false)
+      // flag_kill = one
+      // setOutput('command output is: ')
+      // setOutput('Analysis failed, please restart the session... ')
+      // document.getElementById('spinner').style.display = "none"
+      // document.getElementById("python").innerHTML = "";
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 404) {
+        setIsButtonDisabled(true);
+        setOutput("No analyzed videos found for graph plotting.")
+        setOutput('Resource not found'); // Handle 404 error from the backend
+        return;
+      } else if (!error.ok) {
+        setOutput('Failed to fetch data'); // Handle other non-OK responses
+      }
+    });
+}
 
 
   // Example usage
@@ -138,6 +188,9 @@ animals.map(((animal, index) => {
   if (!selectedFolder) {
     resultSection = <p>Running Section:</p>; // Display "Result Section" if folder is not chosen
   }
+  // else {
+  //   getFiles();
+  // }
 
   const handleSelectChangePara = (event) => {
     const selectedIndex = event.target.selectedIndex;
@@ -159,6 +212,7 @@ animals.map(((animal, index) => {
     if (animal_name != null && paradigm_name != null) {
       const path = selectedDirectory + animal_name + "\\" + paradigm_name;
       setSelectedFolder(path);
+      getFiles();
       console.log("folder is: ",selectedFolder);
   
     }
@@ -188,6 +242,7 @@ animals.map(((animal, index) => {
       console.log("Entered if")
       const path = selectedDirectory + animal_name + "\\" + paradigm_name;
       setSelectedFolder(path);
+      getFiles();
       console.log("folder is: ",selectedFolder);
   
     }
@@ -305,45 +360,7 @@ const handleRadioChange = (event) => {
       });
   }
 
-  const getFiles = async () => {
-    path = selectedDirectory + animal_name + "\\" + paradigm_name;
-    console.log(path) 
-    // setSelectedFolder(null);
-    const data_folder = { name: path }; // Object with key "name" and value "path"
-    const options_folder = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data_folder)
-      };
-    Axios.post('http://localhost:5555/select-file-in-folder', options_folder)
-      .then(response => {
-        setList(response.data)
-        console.log(response.data);
-        if (response.data.length > zero) {
-          toggleModal();
-        }
-        else {
-          setOutput("No analyzed videos found for graph plotting.")
-        }
-
-        // setIsVisible(false)
-        // flag_kill = one
-        // setOutput('command output is: ')
-        // setOutput('Analysis failed, please restart the session... ')
-        // document.getElementById('spinner').style.display = "none"
-        // document.getElementById("python").innerHTML = "";
-      })
-      .catch(error => {
-        if (error.response && error.response.status === 404) {
-          setOutput('Resource not found'); // Handle 404 error from the backend
-        } else if (!error.ok) {
-          setOutput('Failed to fetch data'); // Handle other non-OK responses
-        }
-      });
-  }
-  
+ 
   /**
  * @todo Check the networkerror that happens if i try to send a non existing file and than existing
  * @todo Implement this function.
@@ -367,7 +384,7 @@ const handleRadioChange = (event) => {
     Axios.post('http://localhost:5555/python/create-csv', options_folder)
       .then(response => {
         if (response.data.exitCode === zero) {
-          setOutput('Files created successfully')
+          setOutput('Files created successfully:\n' + response.data.output);
           document.getElementById('spinner').style.display = "none"
           document.getElementById("python").innerHTML = "";
         }
@@ -485,14 +502,15 @@ const handleRadioChange = (event) => {
           <div>
             <pre>{output}</pre>
           </div>
-        </div>
+        
         {/* <div className="alert alert-success text-wrapper-10" role="alert"></div> */}
-        <div className="text-wrapper-8">
+        <div>
           {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
-          <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{ left: '35%' }}>
+          <div className="my-3 d-flex justify-content-between align-items-center">
+          <div className="btn-group btn-group-toggle" data-toggle="buttons">
             {/* <label class="btn btn-dark"> */}
-            <Button className='btn btn-outline-light' name="options" id="option3" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => createCSV()}><VscGraph size={20}/></Button>
-            <Button className='btn btn-outline-light' name="options" id="option4" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="create graph" autoComplete="off" onClick={() => getFiles()}><VscGraphLine size={20}/></Button>
+            <Button className='btn btn-outline-light' name="options" id="option3" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => createCSV()} disabled={isButtonDisabled}><VscGraph size={20}/> Save</Button>
+            <Button className='btn btn-outline-light' name="options" id="option4" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="create graph" autoComplete="off" onClick={() =>  toggleModal()} disabled={isButtonDisabled}><VscGraphLine size={20}/> Plot</Button>
             {/* </label> */}
             <Modal show={showModal} onHide={toggleModal} size='lg'>
                 <Modal.Header closeButton>
@@ -536,20 +554,22 @@ const handleRadioChange = (event) => {
               <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>
             </label> */}
           </div>
-          <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{ left: '40%' }}>
+          <div className="btn-group btn-group-toggle" data-toggle="buttons">
             {/* <label class="btn btn-dark"> */}
-                <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()}><VscPlay size={20}/></Button>
+                <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()}><VscPlay size={20}/> Run</Button>
               {/* <input type="radio" name="options" id="option1" autocomplete="off" checked> Active </input> */}
             {/* </label> */}
             {/* <label class="btn btn-dark"> */}
-            <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()}><VscPrimitiveSquare size={20}/></Button>
+            <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()}><VscPrimitiveSquare size={20}/> Stop</Button>
             {/* </label> */}
             {/* <label class="btn btn-secondary">
               <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>
             </label> */}
           </div>
+          </div>
         </div>
       </div>
+    </div>
     </div>
     <img
       className="deepbrain-logo"

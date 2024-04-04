@@ -1,6 +1,7 @@
 import os
 import dlc2kinematics
 import sys
+import pandas as pd
 
 ONE = 1
 DF = "df_"
@@ -29,17 +30,22 @@ for h5_file in h5_files:
     # csv_path_new = os.path.join(DF, csv_path)
     csv_vel_path = os.path.join(h5_directory, csv_vel_filename)
     # csv_vel_path_new = os.path.join(DF_VEL, csv_vel_path)
+    df_file_path = pd.DataFrame({'File Path': [h5_directory] * len(df)})
 
     # Check if the CSV file already exists
     if not os.path.isfile(csv_path):
-        df.to_csv(csv_path, index=False)
+        # Create a DataFrame with the file path as the first row
+        # Concatenate the two DataFrames
+        df_final = pd.concat([df_file_path, df.reset_index(drop=False)], axis=1)
+        df_final.to_csv(csv_path, index=False)
         print(f'{csv_path} saved successfully.')
     else:
         print(f'{csv_path} already exists. Skipping saving operation.')
 
     # Check if df_vel_bodypart_data.csv already exists
     if not os.path.isfile(csv_vel_path):
-        df_vel_bodypart.to_csv(csv_vel_path, index=False)
+        df_vel_bodypart_final = pd.concat([df_file_path, df_vel_bodypart.reset_index(drop=False)], axis=1)
+        df_vel_bodypart_final.to_csv(csv_vel_path, index=False)
         print(f'{csv_vel_path} saved successfully.')
     else:
         print(f'{csv_vel_path} already exists. Skipping saving operation.')
