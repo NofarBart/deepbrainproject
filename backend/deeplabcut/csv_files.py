@@ -21,14 +21,18 @@ for h5_file in h5_files:
     # Load data from the .h5 file
     df, bodyparts, scorer = dlc2kinematics.load_data(h5_path)
     df_vel_bodypart = dlc2kinematics.compute_velocity(df, bodyparts=['all'], filter_window=3, order=1)
+    df_acc_bodypart = dlc2kinematics.compute_acceleration(df,bodyparts=['all'])
 
     # Generate CSV file names based on the .h5 file name
-    csv_filename = h5_file.replace('.h5', '_data.csv')
+    csv_filename = h5_file.replace('.h5', '_pos_data.csv')
     csv_vel_filename = h5_file.replace('.h5', '_vel_data.csv')
+    csv_acc_filename = h5_file.replace('.h5', '_acc_data.csv')
      
     csv_path = os.path.join(h5_directory, csv_filename)
     # csv_path_new = os.path.join(DF, csv_path)
     csv_vel_path = os.path.join(h5_directory, csv_vel_filename)
+
+    csv_acc_path = os.path.join(h5_directory, csv_acc_filename)
     # csv_vel_path_new = os.path.join(DF_VEL, csv_vel_path)
     df_file_path = pd.DataFrame({'File Path': [h5_directory] * len(df)})
 
@@ -49,6 +53,13 @@ for h5_file in h5_files:
         print(f'{csv_vel_path} saved successfully.')
     else:
         print(f'{csv_vel_path} already exists. Skipping saving operation.')
+    
+    if not os.path.isfile(csv_acc_path):
+        df_acc_bodypart_final = pd.concat([df_file_path, df_acc_bodypart.reset_index(drop=False)], axis=1)
+        df_acc_bodypart_final.to_csv(csv_acc_path, index=False)
+        print(f'{csv_acc_path} saved successfully.')
+    else:
+        print(f'{csv_acc_path} already exists. Skipping saving operation.')
 
 
 

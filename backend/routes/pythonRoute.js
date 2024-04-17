@@ -107,7 +107,7 @@ pythonRouter.post('/create-csv', (req, res) => {
         isProcessing = true;
 
         // Execute the command using spawn
-        pythonProcess = spawn('python', [pythonScriptPath, h5Directory], { shell: true, stdio: 'pipe' });
+        pythonProcess = spawn('python', [pythonScriptPath, h5Directory]);
 
         pythonProcess.stdout.on('data', (data) => {
             output += data.toString();
@@ -122,8 +122,47 @@ pythonRouter.post('/create-csv', (req, res) => {
         pythonProcess.on('exit', (exitCode) => {
             console.log(`Python script exited with code ${exitCode}`);
             isProcessing = false;
-            return res.json({ exitCode, output }); // Send the exit code
+            return res.json({ output, exitCode }); // Send the exit code
         });
+    });
+});
+
+// Function to extract body parts from the output string
+function extractBodyParts(output) {
+    const startIndex = output.indexOf("[");
+    const endIndex = output.indexOf("]");
+    if (startIndex !== -1 && endIndex !== -1) {
+        const body_parts_str = output.substring(startIndex + 1, endIndex); // Exclude the square brackets
+        const body_parts_list = body_parts_str.split(", "); // Split by comma and space
+        const trimmed_body_parts = body_parts_list.map(part => part.replace(/'/g, '')); // Remove single quotes
+        return trimmed_body_parts;
+    } else {
+        console.error("Body parts not found in output:", output);
+        return [];
+    }
+}
+
+pythonRouter.post('/select-body-part', (req, res) => {
+    let output = ''; // Initialize the output variable
+    // console.log(req.body);
+    const configPath = JSON.parse(req.body.body).name;
+    console.log('Received config path:', configPath);
+    const pythonScriptPath = 'deeplabcut/body_parts.py';
+// Process the directory path as needed
+    // Here you can perform operations using the directory path
+     // Execute the command using spawn
+     pythonProcess = spawn('python', [pythonScriptPath, configPath], { shell: true, stdio: 'pipe' });
+
+    // Capture stdout data from the Python process
+    pythonProcess.stdout.on('data', (data) => {
+        output += data.toString(); // Append stdout data to the output string
+    });
+
+    // Handle process exit
+    pythonProcess.on('exit', (exitCode) => {
+        console.log(`Python script exited with code ${exitCode}`);
+        const body_parts = extractBodyParts(output); // Extract body parts from the output
+        return res.json({ body_parts }); // Send the extracted body parts as the response
     });
 });
 
@@ -138,6 +177,7 @@ pythonRouter.post('/create-plots', (req, res) => {
     }
 
     const h5File = JSON.parse(req.body.body).name;
+    const bodyPart = JSON.parse(req.body.body).bpt;
     const pythonScriptPath = 'deeplabcut/analyze.py';
     
     if (!fs.existsSync(h5File)) {
@@ -148,7 +188,7 @@ pythonRouter.post('/create-plots', (req, res) => {
         isProcessing = true;
 
         // Execute the command using spawn
-        pythonProcess = spawn('python', [pythonScriptPath, h5File], { shell: true, stdio: 'pipe' });
+        pythonProcess = spawn('python', [pythonScriptPath, h5File, bodyPart], { shell: true, stdio: 'pipe' });
 
         pythonProcess.stdout.on('data', (data) => {
             console.log('Python script output:', data.toString());

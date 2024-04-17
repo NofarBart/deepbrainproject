@@ -7,6 +7,8 @@ import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
 import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare, VscSend, VscGraph, VscGraphLine } from "react-icons/vsc";
 import { BsPencil, BsBoxArrowInLeft} from "react-icons/bs";
+// import Tab from 'react-bootstrap/Tab';
+// import Tabs from 'react-bootstrap/Tabs';
 
 
 import React, { useEffect, useState } from "react";
@@ -28,19 +30,28 @@ const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [output, setOutput] = useState('');
-  const [selectedDirectory, setSelectedDirectory] = useState('C:\\\\');
+  const [selectedDirectory, setSelectedDirectory] = useState('C:\\\\info\\');
   const [pathInput, setPathInput] = useState(""); // State to hold the input value in the modal
   const [show, setShow] = useState(false);
     // State to manage modal visibility and selected radio button
   const [list, setList] = useState([]);
+  const [listBodyParts, setListBodyParts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [showBodyPartsModal, setShowBodyPartsModal] = useState(false);
+  const [selectedBodyPartOption, setSelectedBodyPartOption] = useState('');
+  const [key, setKey] = useState('home');
 
     // Function to toggle modal visibility
     const toggleModal = () => {
         setShowModal(!showModal);
     };
+
+    // Function to toggle modal visibility
+    const toggleBodyPartModal = () => {
+      setShowBodyPartsModal(!showBodyPartsModal);
+  };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -52,44 +63,95 @@ const Home = () => {
     handleClose(); // Close the modal after saving changes
   };
 
-  const handleSave = () => {
-    if(selectedOption === "") {
-      setIsVisibleModal(true);
-      return;
-    }
-    setIsVisibleModal(false);
+  const handleSaveContinue = () => {
     path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + selectedOption;
-    console.log(path) 
-    const withoutLabeled = path.replace(/_labeled\.mp4$/, '.mp4');
-    const parts = withoutLabeled.split('.');
-    const withoutExtension = parts.slice(0, -1).join('.'); // Removes the last part (file extension)
-    const withH5Extension = withoutExtension + '.h5';
-    console.log(withH5Extension); // Output: '/path/to/video.h5'
+  console.log(path) 
+  const withoutLabeled = path.replace(/_labeled\.mp4$/, '.mp4');
+  const parts = withoutLabeled.split('.');
+  const withoutExtension = parts.slice(0, -1).join('.'); // Removes the last part (file extension)
+  const withH5Extension = withoutExtension + '.h5';
+  console.log(withH5Extension); // Output: '/path/to/video.h5'
+  console.log(selectedBodyPartOption);
+  // setSelectedFolder(null);
+  const data_folder = { name: withH5Extension, bpt: selectedBodyPartOption }; // Object with key "name" and value "path"
+  const options_folder = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data_folder)
+    };
+    document.getElementById("python").innerHTML = "Creating plots...";
+    document.getElementById("spinner").style.display = "block"
+  Axios.post('http://localhost:5555/python/create-plots', options_folder)
+    .then(response => {
+      document.getElementById('spinner').style.display = "none";
+      document.getElementById("python").innerHTML = "";
+    });
+  //     setList(response.data)
+  //     console.log(response.data);
+  //     if (response.data.length > zero) {
+  //       toggleModal();
+  //     }
+  //     else {
+  //       setOutput("No analyzed videos found for graph plotting.")
+  //     }
+  // toggleModal(); // Close the modal after saving changes
+  // toggleBodyPartModal();
+  }
 
-    // setSelectedFolder(null);
-    const data_folder = { name: withH5Extension }; // Object with key "name" and value "path"
-    const options_folder = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data_folder)
-      };
-    Axios.post('http://localhost:5555/python/create-plots', options_folder)
-      .then(response => {
-      });
-    //     setList(response.data)
-    //     console.log(response.data);
-    //     if (response.data.length > zero) {
-    //       toggleModal();
-    //     }
-    //     else {
-    //       setOutput("No analyzed videos found for graph plotting.")
-    //     }
-    toggleModal(); // Close the modal after saving changes
-  };
+const handleBodyPartSave = () => {
+  if(selectedOption === "") {
+    setIsVisibleModal(true);
+    return;
+  }
+  setIsVisibleModal(false);
+  toggleBodyPartModal();
+  // let config_path = selectedDirectory + 'Experiment18-Tester18-2024-02-29\\config.yaml'
+  // console.log(path) 
+  // // setSelectedFolder(null);
+  // const data_folder = { name: config_path }; // Object with key "name" and value "path"
+  // const options_folder = {
+  //   method: 'POST',
+  //   headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify(data_folder)
+  //   };
+  // Axios.post('http://localhost:5555/python/select-body-part', options_folder)
+  //   .then(response => {
+  //     setListBodyParts(response.data.output)
+  //     console.log(response.data.output);
+  handleSaveContinue();
+  setOutput(null);
+  //     // if (response.data.length > zero) {
+  //     //   setIsButtonDisabled(false);
+  //     // }
+  //     // else {
+  //     //   setIsButtonDisabled(true);
+  //     //   setOutput("No analyzed videos found for graph plotting.")
+  //     // }
+  //   })
+
+} 
+
+const handleSave = () => {
+  if(selectedOption === "") {
+    setIsVisibleModal(true);
+    return;
+  }
+  
+  setIsVisibleModal(false);
+  toggleModal(); // Close the modal after saving changes
+  toggleBodyPartModal();
+};
 
   const navigate = useNavigate();
+
+  const navigateToGraphs = () => {
+    // 👇️ navigate to /contacts
+    navigate('/graphs', {replace: true});
+  };
 
   const navigateToCreateParadigm = () => {
     // 👇️ navigate to /contacts
@@ -147,7 +209,7 @@ const getFiles = async () => {
       },
       body: JSON.stringify(data_folder)
     };
-  Axios.post('http://localhost:5555/select-file-in-folder', options_folder)
+  Axios.post('http://localhost:5555/directory/select-file-in-folder', options_folder)
     .then(response => {
       setList(response.data)
       console.log(response.data);
@@ -158,6 +220,7 @@ const getFiles = async () => {
         setIsButtonDisabled(true);
         setOutput("No analyzed videos found for graph plotting.")
       }
+
 
       // setIsVisible(false)
       // flag_kill = one
@@ -176,6 +239,31 @@ const getFiles = async () => {
         setOutput('Failed to fetch data'); // Handle other non-OK responses
       }
     });
+
+    // let config_path = selectedDirectory + 'Experiment18-Tester18-2024-02-29\\config.yaml'
+    // console.log(path) 
+    // // setSelectedFolder(null);
+    // const data = { name: config_path }; // Object with key "name" and value "path"
+    // const options = {
+    //   method: 'POST',
+    //   headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(data)
+    //   };
+    // Axios.post('http://localhost:5555/python/select-body-part', options)
+    //   .then(response => {
+    //     setListBodyParts(response.data)
+    //     console.log(response.data);
+    //     // handleSaveContinue();
+    //     // if (response.data.length > zero) {
+    //     //   setIsButtonDisabled(false);
+    //     // }
+    //     // else {
+    //     //   setIsButtonDisabled(true);
+    //     //   setOutput("No analyzed videos found for graph plotting.")
+    //     // }
+    //   })
 }
 
 
@@ -206,11 +294,13 @@ const getFiles = async () => {
       paradigm_name = selectedName
       console.log(paradigm_name)
     }
+    setIsButtonDisabled(true);
     setIsVisible(false)
     setOutput(null)
     document.getElementById("python").innerHTML = "";
     if (animal_name != null && paradigm_name != null) {
       const path = selectedDirectory + animal_name + "\\" + paradigm_name;
+      setIsButtonDisabled(false);
       setSelectedFolder(path);
       getFiles();
       console.log("folder is: ",selectedFolder);
@@ -233,6 +323,7 @@ const getFiles = async () => {
       animal_name = selectedName
       console.log(animal_name)
     }
+    setIsButtonDisabled(true);
     setIsVisible(false)
     setOutput(null)
     document.getElementById("python").innerHTML = "";
@@ -241,6 +332,7 @@ const getFiles = async () => {
     if (animal_name != null && paradigm_name != null) {
       console.log("Entered if")
       const path = selectedDirectory + animal_name + "\\" + paradigm_name;
+      setIsButtonDisabled(false);
       setSelectedFolder(path);
       getFiles();
       console.log("folder is: ",selectedFolder);
@@ -265,12 +357,44 @@ const getFiles = async () => {
     .catch(err => console.log(err))
 }, []);
 
+  useEffect(()=> {
+    let config_path = 'C:\\Experiment18-Tester18-2024-02-29\\config.yaml'
+    console.log(path) 
+    // setSelectedFolder(null);
+    const data = { name: config_path }; // Object with key "name" and value "path"
+    const options = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      };
+    Axios.post('http://localhost:5555/python/select-body-part', options)
+      .then(response => {
+        setListBodyParts(response.data.body_parts)
+        console.log(response.data.body_parts);
+        // handleSaveContinue();
+        // if (response.data.length > zero) {
+        //   setIsButtonDisabled(false);
+        // }
+        // else {
+        //   setIsButtonDisabled(true);
+        //   setOutput("No analyzed videos found for graph plotting.")
+        // }
+      })
+  }, [])
+
 // Function to handle radio button change
 const handleRadioChange = (event) => {
   setSelectedOption(event.target.value);
   console.log(selectedOption);
 };
 
+// Function to handle radio button change
+const handleRadioChangeBodyPart = (event) => {
+  setSelectedBodyPartOption(event.target.value);
+  console.log(selectedBodyPartOption);
+};
 
 
   const fetchData = async () => {
@@ -291,9 +415,10 @@ const handleRadioChange = (event) => {
             },
             body: JSON.stringify(data_folder)
         };
-          Axios.post('http://localhost:5555/select-folder', options_folder)
+          Axios.post('http://localhost:5555/directory/select-folder', options_folder)
             .catch(err => console.log(err))
-          let config_path = selectedDirectory + 'Experiment18-Tester18-2024-02-29\\config.yaml'
+          let config_path = 'C:\\Experiment18-Tester18-2024-02-29\\config.yaml'
+          
           const data = { config: config_path, videos: path }; // Object with key "name" and value "path"
           const options = {
             method: 'POST',
@@ -424,6 +549,7 @@ const handleRadioChange = (event) => {
       <div className="text-wrapper-10" style={{ backgroundColor: 'rgba(49, 63, 71, 0.3)' }}>
         <div className="alert alert-success text-wrapper-6" role="alert" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
           <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>
+          {/* <input directory="" webkitdirectory="" type="file" /> */}
           <div style={{ display: 'inline-block' }}>
             {selectedDirectory && (
               <p style={{ display: 'inline', marginRight: '10px' }}>Relative path is: {selectedDirectory}</p>
@@ -453,7 +579,7 @@ const handleRadioChange = (event) => {
             </Modal>
           </div>
         </div>
-        <div className="text-wrapper-7" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+        <div className="text-wrapper-4" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
           <label htmlFor="experimental-paradigm">Experimental Paradigm:</label>
           <select
             id="experimental-paradigm"
@@ -471,7 +597,7 @@ const handleRadioChange = (event) => {
             <Button name="options" id="option2" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteParadigm}><VscChromeMinimize /></Button>
           </div>
         </div>
-        <div className="text-wrapper-4" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+        <div className="text-wrapper-7" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
           <label htmlFor="subject">Subject:</label>
           <select
             id="subject"
@@ -539,6 +665,33 @@ const handleRadioChange = (event) => {
                 <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleSave}><VscSend /></Button>
               </Modal.Footer>
             </Modal>
+            <Modal show={showBodyPartsModal} onHide={toggleBodyPartModal} size='lg'>
+                <Modal.Header closeButton>
+                    <Modal.Title>Choose bodypart</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        {listBodyParts.map((item, index) => (
+                            <Form.Check
+                                key={index}
+                                type="radio"
+                                id={`radio-${index}`}
+                                label={item}
+                                value={item}
+                                checked={selectedBodyPartOption === item}
+                                onChange={handleRadioChangeBodyPart}
+                            />
+                        ))}
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                {isVisibleModal && <div className="alert alert-danger" role="alert">Choose body part to analyze!</div>}
+                <Modal.Footer className="my-3 d-flex justify-content-between align-items-center">
+                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={toggleBodyPartModal}><BsBoxArrowInLeft /></Button>
+                <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleBodyPartSave}><VscSend /></Button>
+              </Modal.Footer>
+            </Modal>
             {/* {setShowModal && (
                 <div className="modal">
                     <div className="modal-content">
@@ -556,11 +709,11 @@ const handleRadioChange = (event) => {
           </div>
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
             {/* <label class="btn btn-dark"> */}
-                <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()}><VscPlay size={20}/> Run</Button>
+                <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()} disabled={isButtonDisabled}><VscPlay size={20}/> Run</Button>
               {/* <input type="radio" name="options" id="option1" autocomplete="off" checked> Active </input> */}
             {/* </label> */}
             {/* <label class="btn btn-dark"> */}
-            <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()}><VscPrimitiveSquare size={20}/> Stop</Button>
+            <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()} disabled={isButtonDisabled}><VscPrimitiveSquare size={20}/> Stop</Button>
             {/* </label> */}
             {/* <label class="btn btn-secondary">
               <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>
@@ -568,6 +721,37 @@ const handleRadioChange = (event) => {
           </div>
           </div>
         </div>
+        {/* <Tabs
+          id="controlled-tab-example"
+          activeKey={key}
+          onSelect={(k) => setKey(k)}
+          className="mb-3"
+        >
+          <Tab eventKey="home" title="Home">
+            Tab content for Home
+          </Tab>
+          <Tab eventKey="profile" title="Profile">
+            Tab content for Profile
+          </Tab>
+          <Tab eventKey="contact" title="Contact" disabled>
+            Tab content for Contact
+          </Tab>
+    </Tabs> */}
+        {/* <div className="features">
+         <h2>Features</h2>
+         <p>Our aim is to make it quick and easy for you to access your favourite websites. Your bookmarks sync between your devices so you can access them on the go.</p>
+    
+         <div className="feature-options">
+            <ul>
+               <li onClick={() => setTab("graphOne")}>Simple Bookmarking</li>
+              
+            </ul>
+
+            //Tab area
+            {tab === "graphOne" && <GraphOne />}
+            
+         </div>
+      </div> */}
       </div>
     </div>
     </div>

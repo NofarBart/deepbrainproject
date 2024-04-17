@@ -38,17 +38,14 @@ VideoType = 'mp4'
 # config = 'C:\Experiment16-Tester16-2024-02-21\config.yaml'
 # h5 = 'C:\Experiment18-Tester18-2024-02-29\\videos\\vid1DLC_resnet50_Experiment18Feb29shuffle1_20000.h5'
 h5 = os.path.join(os.getcwd(),sys.argv[ONE])
-
+bpt = sys.argv[TWO]
 df, bodyparts, scorer = dlc2kinematics.load_data(h5)
 # # Save df to CSV
 # df.to_csv('df_data.csv', index=False)
 
-
-bpt='right_front_Z'
-
-df_vel = dlc2kinematics.compute_velocity(df,bodyparts=['all'], filter_window=THREE, order=ONE)
-# print("df val is:\n", df_vel)
-df_speed = dlc2kinematics.compute_speed(df,bodyparts=[bpt], filter_window=THREE, order=ONE)
+# df_vel = dlc2kinematics.compute_velocity(df,bodyparts=['all'], filter_window=THREE, order=ONE)
+# # print("df val is:\n", df_vel)
+# df_speed = dlc2kinematics.compute_speed(df,bodyparts=[bpt], filter_window=THREE, order=ONE)
 # print("df speed is:\n", df_speed)
 # print("df speed is:\n", df_speed)
 
@@ -56,6 +53,8 @@ df_speed = dlc2kinematics.compute_speed(df,bodyparts=[bpt], filter_window=THREE,
 
 df_vel_bodypart = dlc2kinematics.compute_velocity(df,bodyparts=[bpt], filter_window=THREE, order=ONE)
 df_vel_bodypart
+
+
 
 # Compute the average of 'x' values
 average_x = df[scorer][bpt]['x'].median()
@@ -102,7 +101,28 @@ print(df[scorer][bpt])
 #     print('df_vel_bodypart_data.csv already exists. Skipping saving operation.')
 # print("df val is:\n", df_vel_bodypart)
 # dlc2kinematics.plot_velocity(df[scorer][bpt], df_vel_bodypart, start=1700, end=1900)
-dlc2kinematics.plot_velocity(df[scorer][bpt], df_vel_bodypart)
+# dlc2kinematics.plot_velocity(df[scorer][bpt], df_vel_bodypart)
+
+
+ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")    
+plt.xlabel("Frame numbers")
+plt.ylabel("velocity (AU)")
+ax.spines["right"].set_visible(False)
+ax.spines["top"].set_visible(False)
+plt.title("Computed Velocity", loc="left")
+plt.legend(loc='lower left', labels=['x', 'y', 'likelihood'])
+plt.savefig("output1.jpg")
+
+ax1 = df[scorer][bpt][ZERO:len(df_vel_bodypart)].plot(kind="line")
+plt.xlabel("Frame numbers")
+plt.ylabel("position")
+ax1.spines["right"].set_visible(False)
+ax1.spines["top"].set_visible(False)
+plt.title("Loaded Position Data", loc="left")
+plt.legend(loc='lower left')
+plt.savefig("output2.jpg")
+
+plt.close('all')
 
 #let's calculate velocity of the snout
 
@@ -138,8 +158,8 @@ prev_value = velocity_values[ZERO]
 frame_start = ZERO
 frame_end = ZERO
 flag = ZERO
-color_forwards = iter(cm.BuGn(np.linspace(0,1,len(velocity_values))))
-color_backwards = iter(cm.OrRd(np.linspace(0,1,len(velocity_values))))
+color_forwards = iter(cm.Purples(np.linspace(0,1,len(velocity_values))))
+color_backwards = iter(cm.Greys(np.linspace(0,1,len(velocity_values))))
 
 # Go over the velocities, check if reaches zero:
 for index, value in velocity_values.items():
