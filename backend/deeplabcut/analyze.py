@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 import sys
 import cv2
+from js.d3 import d3
 import time_in_each_roi #the function needs to be in the same folder as the notebook
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import keras
@@ -103,6 +104,97 @@ print(df[scorer][bpt])
 # dlc2kinematics.plot_velocity(df[scorer][bpt], df_vel_bodypart, start=1700, end=1900)
 # dlc2kinematics.plot_velocity(df[scorer][bpt], df_vel_bodypart)
 
+ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")  
+# Extract data from the Matplotlib plot (assuming ax is a Matplotlib AxesSubplot)
+lines = ax.get_lines()  # Get all lines from the plot
+
+# Initialize empty lists for time and velocity data
+time_data = []
+velocity_data = []
+
+# Extract data from each line and append to the respective lists
+for line in lines:
+    x_data = line.get_xdata()  # Get x-axis data
+    y_data = line.get_ydata()  # Get y-axis data
+
+    # Append data to the lists
+    time_data.extend(x_data)
+    velocity_data.extend(y_data)
+
+# # Define margin as a string in Python
+# margin = '{ top: 20, right: 30, bottom: 30, left: 50 }'
+# height = '400'
+
+# # Generate D3.js code with the extracted data
+# d3_code = f"""
+# // D3.js code for a line chart
+# const margin = {margin};
+# const width = 600 - margin.left - margin.right;
+# const height = {height} - margin.top - margin.bottom;
+
+# // Python data converted to JavaScript arrays
+# const timeData = {time_data};
+# const velocityData = {velocity_data};
+
+# const data = timeData.map((d, i) => ({{
+#     time: d,
+#     velocity: velocityData[i]
+# }}));
+
+# const svg = d3.select("body").append("svg")
+#     .attr("width", width + margin.left + margin.right)
+#     .attr("height", height + margin.top + margin.bottom)
+#     .append("g")
+#     .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+# const x = d3.scaleLinear()
+#     .domain([0, d3.max(data.time)])
+#     .range([0, width]);
+
+# const y = d3.scaleLinear()
+#     .domain([0, d3.max(data.velocity)])
+#     .range([height, 0]);
+
+# const line = d3.line()
+#     .x((d) => x(d.time))
+#     .y((d) => y(d.velocity));
+
+# svg.append("path")
+#     .datum(data)
+#     .attr("fill", "none")
+#     .attr("stroke", "steelblue")
+#     .attr("stroke-width", 2)
+#     .attr("d", line);
+
+# svg.append("g")
+#     .attr("transform", `translate(0, ${height})`)
+#     .call(d3.axisBottom(x));
+
+# svg.append("g")
+#     .call(d3.axisLeft(y));
+
+# svg.append("text")
+#     .attr("x", width / 2)
+#     .attr("y", height + margin.top + 20)
+#     .style("text-anchor", "middle")
+#     .text("Time");
+
+# svg.append("text")
+#     .attr("transform", "rotate(-90)")
+#     .attr("x", -height / 2)
+#     .attr("y", -margin.left + 10)
+#     .style("text-anchor", "middle")
+#     .text("Velocity");
+
+# console.log("D3.js code generated successfully.");
+# """
+
+# # Save the D3.js code to a JavaScript file
+# with open("line_chart.js", "w") as js_file:
+#     js_file.write(d3_code)
+
+# print("D3.js code saved to line_chart.js")
+
 
 ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")    
 plt.xlabel("Frame numbers")
@@ -123,24 +215,32 @@ plt.legend(loc='lower left')
 plt.savefig("output2.jpg")
 
 plt.close('all')
-
 #let's calculate velocity of the snout
 
-vel = time_in_each_roi.calc_distance_between_points_in_a_vector_2d(np.vstack([df[scorer][bpt]['x'].values.flatten(), df[scorer][bpt]['y'].values.flatten()]).T)
 
-fps=120 # frame rate of camera in those experiments
-time=np.arange(len(vel))*1./fps
-vel=vel #notice the units of vel are relative pixel distance [per time step]
 
-# store in other variables:
-xleg=df[scorer][bpt]['x'].values
-yleg=df[scorer][bpt]['y'].values
-vleg=vel
-plt.plot(time,vel*1./fps)
-plt.title('Speed in pixels over time')
-plt.xlabel('Time in seconds')
-plt.ylabel('Speed in pixels per second')
-plt.show()
+
+
+
+# vel = time_in_each_roi.calc_distance_between_points_in_a_vector_2d(np.vstack([df[scorer][bpt]['x'].values.flatten(), df[scorer][bpt]['y'].values.flatten()]).T)
+
+# fps=120 # frame rate of camera in those experiments
+# time=np.arange(len(vel))*1./fps
+# vel=vel #notice the units of vel are relative pixel distance [per time step]
+
+# # store in other variables:
+# xleg=df[scorer][bpt]['x'].values
+# yleg=df[scorer][bpt]['y'].values
+# vleg=vel
+# plt.plot(time,vel*1./fps)
+# plt.title('Speed in pixels over time')
+# plt.xlabel('Time in seconds')
+# plt.ylabel('Speed in pixels per second')
+# plt.show()
+
+
+
+
 # print("first val is:\n", df[scorer][bpt]['x'])
 # print("second val is:\n", df_vel_bodypart)
 
@@ -197,4 +297,6 @@ for index, value in velocity_values.items():
 plt.title("Walking pattern of the mouse")
 plt.xlabel("x location [AU]")
 plt.ylabel("y location [AU]")
-plt.show()
+plt.savefig("output3.jpg")
+
+plt.close('all')

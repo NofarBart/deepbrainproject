@@ -32,7 +32,8 @@ const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [output, setOutput] = useState('');
-  const [selectedDirectory, setSelectedDirectory] = useState('C:\\\\info\\');
+  const [selectedDirectory, setSelectedDirectory] = useState(localStorage.getItem('selectedDirectory') || 'C:\\info\\');
+  // const [selectedDirectory, setSelectedDirectory] = useState('C:\\\\info\\');
   const [pathInput, setPathInput] = useState(""); // State to hold the input value in the modal
   const [show, setShow] = useState(false);
     // State to manage modal visibility and selected radio button
@@ -90,16 +91,6 @@ const Home = () => {
       document.getElementById('spinner').style.display = "none";
       document.getElementById("python").innerHTML = "";
     });
-  //     setList(response.data)
-  //     console.log(response.data);
-  //     if (response.data.length > zero) {
-  //       toggleModal();
-  //     }
-  //     else {
-  //       setOutput("No analyzed videos found for graph plotting.")
-  //     }
-  // toggleModal(); // Close the modal after saving changes
-  // toggleBodyPartModal();
   }
 
 const handleBodyPartSave = () => {
@@ -109,31 +100,10 @@ const handleBodyPartSave = () => {
   }
   setIsVisibleModal(false);
   toggleBodyPartModal();
-  // let config_path = selectedDirectory + 'Experiment18-Tester18-2024-02-29\\config.yaml'
-  // console.log(path) 
-  // // setSelectedFolder(null);
-  // const data_folder = { name: config_path }; // Object with key "name" and value "path"
-  // const options_folder = {
-  //   method: 'POST',
-  //   headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(data_folder)
-  //   };
-  // Axios.post('http://localhost:5555/python/select-body-part', options_folder)
-  //   .then(response => {
-  //     setListBodyParts(response.data.output)
-  //     console.log(response.data.output);
+ 
   handleSaveContinue();
   setOutput(null);
-  //     // if (response.data.length > zero) {
-  //     //   setIsButtonDisabled(false);
-  //     // }
-  //     // else {
-  //     //   setIsButtonDisabled(true);
-  //     //   setOutput("No analyzed videos found for graph plotting.")
-  //     // }
-  //   })
+
 
 } 
 
@@ -174,12 +144,6 @@ const handleSave = () => {
     // 👇️ navigate to /contacts
     navigate('/deleteAnimal', {replace: true});
   };
-
-  // const handleDirectoryChange = (event) => {
-  //   event.preventDefault(); // Prevent default behavior
-  //   const directoryPath = event.target.files[0].path;
-  //   setSelectedDirectory(directoryPath);
-  // };
 
   paradigms.map(((paradigm, index) => {
     if (index === 0 && paradigm_name == null) {
@@ -223,13 +187,6 @@ const getFiles = async () => {
         setOutput("No analyzed videos found for graph plotting.")
       }
 
-
-      // setIsVisible(false)
-      // flag_kill = one
-      // setOutput('command output is: ')
-      // setOutput('Analysis failed, please restart the session... ')
-      // document.getElementById('spinner').style.display = "none"
-      // document.getElementById("python").innerHTML = "";
     })
     .catch(error => {
       if (error.response && error.response.status === 404) {
@@ -241,31 +198,6 @@ const getFiles = async () => {
         setOutput('Failed to fetch data'); // Handle other non-OK responses
       }
     });
-
-    // let config_path = selectedDirectory + 'Experiment18-Tester18-2024-02-29\\config.yaml'
-    // console.log(path) 
-    // // setSelectedFolder(null);
-    // const data = { name: config_path }; // Object with key "name" and value "path"
-    // const options = {
-    //   method: 'POST',
-    //   headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(data)
-    //   };
-    // Axios.post('http://localhost:5555/python/select-body-part', options)
-    //   .then(response => {
-    //     setListBodyParts(response.data)
-    //     console.log(response.data);
-    //     // handleSaveContinue();
-    //     // if (response.data.length > zero) {
-    //     //   setIsButtonDisabled(false);
-    //     // }
-    //     // else {
-    //     //   setIsButtonDisabled(true);
-    //     //   setOutput("No analyzed videos found for graph plotting.")
-    //     // }
-    //   })
 }
 
 
@@ -331,6 +263,7 @@ const getFiles = async () => {
       .catch(err => {
         setSessions(null)
         session_number = null;
+        setOutput("Resource not found")
         console.log(err)})
     }  
   };
@@ -386,6 +319,7 @@ const getFiles = async () => {
       .catch(err => {
         setSessions(null)
         session_number = null;
+        setOutput("Resource not found")
         console.log(err)})
     } 
   };
@@ -406,7 +340,6 @@ const getFiles = async () => {
     }
     setIsButtonDisabled(true);
     setIsVisible(false)
-    setOutput(null)
     document.getElementById("python").innerHTML = "";
     if (animal_name != null && paradigm_name != null && session_number != null) {
       const path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
@@ -434,6 +367,11 @@ const getFiles = async () => {
     .then(animals => setAnimals(animals.data))
     .catch(err => console.log(err))
 }, []);
+
+useEffect(() => {
+  localStorage.setItem('selectedDirectory', selectedDirectory);
+}, [selectedDirectory]);
+
 
 // useEffect(()=> {  
 //   // here we get the data by requesting data from this link
@@ -539,8 +477,10 @@ const handleRadioChangeBodyPart = (event) => {
           .catch (error => {
             if (error.response && error.response.status === 404) {
               setOutput('Resource error: ' + error.response.data.message); // Handle 404 error from the backend
+              console.log(output);
             } else if (!error.ok) {
               setOutput('Failed to fetch data: ' + error.message); // Handle other non-OK responses
+              console.log(output);
             }
             document.getElementById('spinner').style.display = "none"
             document.getElementById("python").innerHTML = "";
@@ -730,7 +670,7 @@ const handleRadioChangeBodyPart = (event) => {
           </div>
         
         {/* <div className="alert alert-success text-wrapper-10" role="alert"></div> */}
-        <div>
+        <div style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
           {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
           <div className="my-3 d-flex justify-content-between align-items-center">
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
@@ -792,66 +732,16 @@ const handleRadioChangeBodyPart = (event) => {
                 <Button className='btn btn-outline-dark' variant='light' size="lg" onClick={handleBodyPartSave}><VscSend /></Button>
               </Modal.Footer>
             </Modal>
-            {/* {setShowModal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <span className="close" onClick={toggleModal}>&times;</span>
-                        <h2>Select an Option</h2>
-                        
-                        <button onClick={toggleModal}>Close</button>
-                    </div>
-                </div>
-            )} */}
-            
-            {/* <label class="btn btn-secondary">
-              <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>
-            </label> */}
           </div>
+          <script src="line_chart.js"></script>
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
-            {/* <label class="btn btn-dark"> */}
-                <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()} disabled={isButtonDisabled}><VscPlay size={20}/> Run</Button>
-              {/* <input type="radio" name="options" id="option1" autocomplete="off" checked> Active </input> */}
-            {/* </label> */}
-            {/* <label class="btn btn-dark"> */}
+            <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()} disabled={isButtonDisabled}><VscPlay size={20}/> Run</Button>
             <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()} disabled={isButtonDisabled}><VscPrimitiveSquare size={20}/> Stop</Button>
-            {/* </label> */}
-            {/* <label class="btn btn-secondary">
-              <input type="radio" name="options" id="option3" autocomplete="off"> Radio</input>
-            </label> */}
           </div>
           </div>
         </div>
-        {/* <Tabs
-          id="controlled-tab-example"
-          activeKey={key}
-          onSelect={(k) => setKey(k)}
-          className="mb-3"
-        >
-          <Tab eventKey="home" title="Home">
-            Tab content for Home
-          </Tab>
-          <Tab eventKey="profile" title="Profile">
-            Tab content for Profile
-          </Tab>
-          <Tab eventKey="contact" title="Contact" disabled>
-            Tab content for Contact
-          </Tab>
-    </Tabs> */}
-        {/* <div className="features">
-         <h2>Features</h2>
-         <p>Our aim is to make it quick and easy for you to access your favourite websites. Your bookmarks sync between your devices so you can access them on the go.</p>
-    
-         <div className="feature-options">
-            <ul>
-               <li onClick={() => setTab("graphOne")}>Simple Bookmarking</li>
-              
-            </ul>
-
-            //Tab area
-            {tab === "graphOne" && <GraphOne />}
-            
-         </div>
-      </div> */}
+        
+        
       </div>
     </div>
     </div>
@@ -861,19 +751,6 @@ const handleRadioChangeBodyPart = (event) => {
       src={require('../images/deepbrain-logo.jpg')}
     />
   </div>
-  {/* Directory Selection */}
-  {/* <div className="directory-selection-wrapper">
-    <div className="text-wrapper-9">
-      <input
-        id="directoryInput"
-        type="text"
-        value={selectedDirectory}
-        onChange={(e) => setSelectedDirectory(e.target.value)}
-        style={{ width: "300px" }}
-      />
-      {selectedDirectory && <p>Selected Directory: {selectedDirectory}</p>}
-    </div>
-  </div> */}
 </div>
 
     
