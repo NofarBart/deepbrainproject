@@ -55,4 +55,42 @@ directoryRouter.post('/select-file-in-folder', (req, res) => {
     
     // res.json({ message: 'Directory path received successfully' });
 });
+
+// Define route handler for '/select-folder' POST requests
+directoryRouter.post('/sessions', (req, res) => {
+    // console.log(req.body);
+    const directoryPath = JSON.parse(req.body.body).name;
+    console.log('Received directory path:', directoryPath);
+     // Read the contents of the directory
+     fs.readdir(directoryPath, (err, files) => {
+        if (err) {
+            return res.status(404).json({ message: 'No directory found.' });
+        }
+
+        let fileList = [];
+
+        // Iterate through each item in the directory
+        files.forEach(item => {
+            const itemPath = path.join(directoryPath, item);
+
+            // Check if the item is a directory using fs.stat
+            fs.stat(itemPath, (err, stats) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+
+                if (stats.isDirectory()) {
+                    fileList.push(item); // Add directory to the fileList array
+                }
+
+                // Check if this is the last item in the directory
+                if (fileList.length === files.length) {
+                    console.log('List of directories:', fileList);
+                    return res.status(201).send(fileList);
+                }
+            });
+        });
+    });
+});
 export default directoryRouter;

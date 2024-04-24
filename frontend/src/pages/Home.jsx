@@ -20,12 +20,14 @@ const zero = 0
 const one = 1
 let paradigm_name;
 let animal_name;
+let session_number;
 let flag_kill = zero;
 
 const Home = () => {
   // will update list as database updates on refreshing the site
   const [paradigms, setParadigms] = useState([])
   const [animals, setAnimals] = useState([])
+  const [sessions, setSessions] = useState([])
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -64,7 +66,7 @@ const Home = () => {
   };
 
   const handleSaveContinue = () => {
-    path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + selectedOption;
+  path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number + "\\" + selectedOption;
   console.log(path) 
   const withoutLabeled = path.replace(/_labeled\.mp4$/, '.mp4');
   const parts = withoutLabeled.split('.');
@@ -198,7 +200,7 @@ animals.map(((animal, index) => {
 }));
 
 const getFiles = async () => {
-  path = selectedDirectory + animal_name + "\\" + paradigm_name;
+  path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
   console.log(path) 
   // setSelectedFolder(null);
   const data_folder = { name: path }; // Object with key "name" and value "path"
@@ -269,7 +271,7 @@ const getFiles = async () => {
 
   // Example usage
   // const directoryPath = 'C:\\\\';
-  let path = selectedDirectory + animal_name + "\\" + paradigm_name;
+  let path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
   // let response;
   let resultSection = null; // Initialize result section to null
 
@@ -281,6 +283,8 @@ const getFiles = async () => {
   // }
 
   const handleSelectChangePara = (event) => {
+    setSessions(null)
+    session_number = null;
     const selectedIndex = event.target.selectedIndex;
     const selectedName = event.target[selectedIndex].text;
     // console.log(selectedName)
@@ -298,17 +302,42 @@ const getFiles = async () => {
     setIsVisible(false)
     setOutput(null)
     document.getElementById("python").innerHTML = "";
-    if (animal_name != null && paradigm_name != null) {
+
+    if (animal_name != null && paradigm_name != null && session_number == null) {
       const path = selectedDirectory + animal_name + "\\" + paradigm_name;
-      setIsButtonDisabled(false);
       setSelectedFolder(path);
-      getFiles();
-      console.log("folder is: ",selectedFolder);
-  
-    }
+      console.log(path)
+      const data = { name: path }; // Object with key "name" and value "path"
+      const options = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      };
+      Axios.post('http://localhost:5555/directory/sessions', options)
+      .then(sessions => {
+        console.log("Session data is: ", sessions.data);
+        setSessions(sessions.data)
+        if (animal_name != null && paradigm_name != null && session_number != null) {
+          console.log("Entered the big place");
+          console.log("Session number is: ", session_number);
+          const path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+          setIsButtonDisabled(false);
+          setSelectedFolder(path);
+          getFiles();
+          console.log("folder is: ",selectedFolder); }
+      })
+      .catch(err => {
+        setSessions(null)
+        session_number = null;
+        console.log(err)})
+    }  
   };
   
   const handleSelectChangeAni = (event) => {
+    setSessions(null)
+    session_number = null;
     const selectedIndex = event.target.selectedIndex;
     const selectedName = event.target[selectedIndex].text;
 
@@ -328,10 +357,59 @@ const getFiles = async () => {
     setOutput(null)
     document.getElementById("python").innerHTML = "";
     // console.log(selectedName)
-  
-    if (animal_name != null && paradigm_name != null) {
-      console.log("Entered if")
+    if (animal_name != null && paradigm_name != null && session_number == null) {
       const path = selectedDirectory + animal_name + "\\" + paradigm_name;
+      setSelectedFolder(path);
+      console.log("changed pathhhh")
+      console.log(path)
+      const data = { name: path }; // Object with key "name" and value "path"
+      const options = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      };
+      Axios.post('http://localhost:5555/directory/sessions', options)
+      .then(sessions => {
+        console.log("Session data is: ", sessions.data);
+        setSessions(sessions.data)
+        if (animal_name != null && paradigm_name != null && session_number != null) {
+          console.log("Entered the big place");
+          console.log("Session number is: ", session_number);
+          const path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+          setIsButtonDisabled(false);
+          setSelectedFolder(path);
+          getFiles();
+          console.log("folder is: ",selectedFolder); }
+      })
+      .catch(err => {
+        setSessions(null)
+        session_number = null;
+        console.log(err)})
+    } 
+  };
+
+  const handleSelectChangeSess = (event) => {
+    const selectedIndex = event.target.selectedIndex;
+    const selectedName = event.target[selectedIndex].text;
+    // console.log(selectedName)
+    if (selectedName === "select session") {
+      console.log("Entered if")
+      session_number = null
+      setSelectedFolder(null)
+      console.log("folder is: ",selectedFolder);
+    }
+    else {
+      session_number = selectedName
+      console.log(session_number)
+    }
+    setIsButtonDisabled(true);
+    setIsVisible(false)
+    setOutput(null)
+    document.getElementById("python").innerHTML = "";
+    if (animal_name != null && paradigm_name != null && session_number != null) {
+      const path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
       setIsButtonDisabled(false);
       setSelectedFolder(path);
       getFiles();
@@ -356,6 +434,14 @@ const getFiles = async () => {
     .then(animals => setAnimals(animals.data))
     .catch(err => console.log(err))
 }, []);
+
+// useEffect(()=> {  
+//   // here we get the data by requesting data from this link
+//   // to our nodejs server
+//   Axios.get('http://localhost:5555/directories/session')
+//   .then(sessions => setSessions(sessions.data))
+//   .catch(err => console.log(err))
+// }, []);
 
   useEffect(()=> {
     let config_path = 'C:\\Experiment18-Tester18-2024-02-29\\config.yaml'
@@ -399,12 +485,12 @@ const handleRadioChangeBodyPart = (event) => {
 
   const fetchData = async () => {
       try {
-          if(animal_name == null || paradigm_name == null) {
+          if(animal_name == null || paradigm_name == null || session_number == null) {
             setIsVisible(true);
             return;
           }
           setIsVisible(false);
-          path = selectedDirectory + animal_name + "\\" + paradigm_name;
+          path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
           console.log(path) 
           // setSelectedFolder(null);
           const data_folder = { name: path }; // Object with key "name" and value "path"
@@ -492,7 +578,7 @@ const handleRadioChangeBodyPart = (event) => {
  */
 
   const createCSV = async () => {
-    path = selectedDirectory + animal_name + "\\" + paradigm_name;
+    path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
           console.log(path) 
           // setSelectedFolder(null);
           const data_folder = { name: path }; // Object with key "name" and value "path"
@@ -615,6 +701,20 @@ const handleRadioChangeBodyPart = (event) => {
             <Button name="options" id="option2" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteAnimal}><VscChromeMinimize /></Button>
           </div>
         </div>
+        <div className="text-wrapper-11" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+          <label htmlFor="session">Session:</label>
+          <select
+            id="session"
+            className="form-select"
+            style={{ right: '100px', left: '100px' }}
+            onChange={handleSelectChangeSess}
+          >
+            <option value="">select session</option>
+            {sessions !== null && sessions.map((session, index) => (
+              <option key={index}>{session}</option>
+            ))}
+          </select>
+          </div>
         <div className="alert alert-success text-wrapper-5" role="alert" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
           {selectedFolder && (
             <div>
