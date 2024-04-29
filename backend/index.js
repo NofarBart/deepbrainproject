@@ -8,7 +8,6 @@ import pythonRouter from "./routes/pythonRoute.js";
 import directoryRouter from "./routes/directoryRoute.js";
 
 const app = express();
-
 //middleware for parsing req body
 
 app.use(express.json());

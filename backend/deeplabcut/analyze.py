@@ -19,7 +19,9 @@ import numpy as np
 import pandas as pd
 import sys
 import cv2
-from js.d3 import d3
+import mpld3
+import plotly.graph_objs as go
+from plotly.tools import mpl_to_plotly
 import time_in_each_roi #the function needs to be in the same folder as the notebook
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import keras
@@ -104,22 +106,22 @@ print(df[scorer][bpt])
 # dlc2kinematics.plot_velocity(df[scorer][bpt], df_vel_bodypart, start=1700, end=1900)
 # dlc2kinematics.plot_velocity(df[scorer][bpt], df_vel_bodypart)
 
-ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")  
-# Extract data from the Matplotlib plot (assuming ax is a Matplotlib AxesSubplot)
-lines = ax.get_lines()  # Get all lines from the plot
+# ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")  
+# # Extract data from the Matplotlib plot (assuming ax is a Matplotlib AxesSubplot)
+# lines = ax.get_lines()  # Get all lines from the plot
 
-# Initialize empty lists for time and velocity data
-time_data = []
-velocity_data = []
+# # Initialize empty lists for time and velocity data
+# time_data = []
+# velocity_data = []
 
-# Extract data from each line and append to the respective lists
-for line in lines:
-    x_data = line.get_xdata()  # Get x-axis data
-    y_data = line.get_ydata()  # Get y-axis data
+# # Extract data from each line and append to the respective lists
+# for line in lines:
+#     x_data = line.get_xdata()  # Get x-axis data
+#     y_data = line.get_ydata()  # Get y-axis data
 
-    # Append data to the lists
-    time_data.extend(x_data)
-    velocity_data.extend(y_data)
+#     # Append data to the lists
+#     time_data.extend(x_data)
+#     velocity_data.extend(y_data)
 
 # # Define margin as a string in Python
 # margin = '{ top: 20, right: 30, bottom: 30, left: 50 }'
@@ -194,26 +196,45 @@ for line in lines:
 #     js_file.write(d3_code)
 
 # print("D3.js code saved to line_chart.js")
+########################
+#Subplot 1
+########################
+#Set the size of the matplotlib canvas
+fig = plt.figure(figsize = (18,8))
+# plt.subplot(1,3,1)
 
+def velocity():
+    ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")    
+    plt.xlabel("Frame numbers")
+    plt.ylabel("velocity (AU)")
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
+    plt.title("Computed Velocity", loc="left")
+    plt.legend(loc='lower left', labels=['x', 'y', 'likelihood'])
 
-ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")    
-plt.xlabel("Frame numbers")
-plt.ylabel("velocity (AU)")
-ax.spines["right"].set_visible(False)
-ax.spines["top"].set_visible(False)
-plt.title("Computed Velocity", loc="left")
-plt.legend(loc='lower left', labels=['x', 'y', 'likelihood'])
-plt.savefig("output1.jpg")
+velocity()
+plt.savefig("../frontend/src/output1.jpg")
+plt.close('all')
+velocity()
+plt.savefig("../frontend/public/output1.jpg")
+########################
+#Subplot 2
+########################
+# plt.subplot(1,3,2)
 
-ax1 = df[scorer][bpt][ZERO:len(df_vel_bodypart)].plot(kind="line")
-plt.xlabel("Frame numbers")
-plt.ylabel("position")
-ax1.spines["right"].set_visible(False)
-ax1.spines["top"].set_visible(False)
-plt.title("Loaded Position Data", loc="left")
-plt.legend(loc='lower left')
-plt.savefig("output2.jpg")
-
+def position():
+    ax1 = df[scorer][bpt][ZERO:len(df_vel_bodypart)].plot(kind="line")
+    plt.xlabel("Frame numbers")
+    plt.ylabel("position")
+    ax1.spines["right"].set_visible(False)
+    ax1.spines["top"].set_visible(False)
+    plt.title("Loaded Position Data", loc="left")
+    plt.legend(loc='lower left')
+position()
+plt.savefig("../frontend/src/output2.jpg")
+plt.close('all')
+position()
+plt.savefig("../frontend/public/output2.jpg")
 plt.close('all')
 #let's calculate velocity of the snout
 
@@ -250,53 +271,64 @@ plt.close('all')
 # # plt.axis((1840, 1880, 1840, 1880))
 # plt.show()
 
+########################
+#Subplot 3
+########################
+# plt.subplot(1,3,3)
+def walking_pattern():
+    velocity_values = df_vel_bodypart[(scorer, bpt, 'x')]
+    prev_value = velocity_values[ZERO]
+    # prev_index = ZERO
+    frame_start = ZERO
+    frame_end = ZERO
+    flag = ZERO
+    color_forwards = iter(cm.Purples(np.linspace(0,1,len(velocity_values))))
+    color_backwards = iter(cm.Greys(np.linspace(0,1,len(velocity_values))))
+
+    # Go over the velocities, check if reaches zero:
+    for index, value in velocity_values.items():
+        c_f = next(color_forwards)
+        c_b = next(color_backwards)
+        # Check if the value is higher than zero and is the first nan-negative value (starting movement)
+        if (value > prev_value and value >= ZERO and prev_value < ZERO):
+            frame_start = index
 
 
-velocity_values = df_vel_bodypart[(scorer, bpt, 'x')]
-prev_value = velocity_values[ZERO]
-# prev_index = ZERO
-frame_start = ZERO
-frame_end = ZERO
-flag = ZERO
-color_forwards = iter(cm.Purples(np.linspace(0,1,len(velocity_values))))
-color_backwards = iter(cm.Greys(np.linspace(0,1,len(velocity_values))))
-
-# Go over the velocities, check if reaches zero:
-for index, value in velocity_values.items():
-    c_f = next(color_forwards)
-    c_b = next(color_backwards)
-    # Check if the value is higher than zero and is the first nan-negative value (starting movement)
-    if (value > prev_value and value >= ZERO and prev_value < ZERO):
-        frame_start = index
+            # If movement ended, plot the end of the prev. movement as the start of the new
+            # When flag is one or (frame_start - frame_end) is smaller than 5 it is a noise (false movement) 
+            if (frame_end != ZERO and (frame_start - frame_end) > 5 and flag == ZERO):
+                # Plot the end of the movement
+                plt.plot(df[scorer][bpt]['x'][frame_end:frame_start - 3], -df[scorer][bpt]['y'][frame_end:frame_start - 3], color = c_b)
+        # Define as false movement 
+        if ((index - frame_start) <= 5):
+            flag = ONE
 
 
-        # If movement ended, plot the end of the prev. movement as the start of the new
-        # When flag is one or (frame_start - frame_end) is smaller than 5 it is a noise (false movement) 
-        if (frame_end != ZERO and (frame_start - frame_end) > 5 and flag == ZERO):
-            # Plot the end of the movement
-            plt.plot(df[scorer][bpt]['x'][frame_end:frame_start - 3], -df[scorer][bpt]['y'][frame_end:frame_start - 3], color = c_b)
-    # Define as false movement 
-    if ((index - frame_start) <= 5):
-        flag = ONE
+        # Check if the value is smaller than zero and is the first nan-positive value (ending movement)
+        elif (value < prev_value and value <= ZERO and prev_value > ZERO):
+            flag = ZERO
+            frame_end = index
 
 
-    # Check if the value is smaller than zero and is the first nan-positive value (ending movement)
-    elif (value < prev_value and value <= ZERO and prev_value > ZERO):
-        flag = ZERO
-        frame_end = index
-
-
-    if (frame_start < frame_end):
-       
-#    plt.plot(x, y, c=c)
-        # Plot the start of the movement
-        # c=next(color) #Change colour for each line in plot
-        plt.plot(df[scorer][bpt]['x'][frame_start:frame_end], -df[scorer][bpt]['y'][frame_start:frame_end], color=c_f)
-    prev_value = value
-    # prev_index = index
-plt.title("Walking pattern of the mouse")
-plt.xlabel("x location [AU]")
-plt.ylabel("y location [AU]")
-plt.savefig("output3.jpg")
-
+        if (frame_start < frame_end):
+        
+    #    plt.plot(x, y, c=c)
+            # Plot the start of the movement
+            # c=next(color) #Change colour for each line in plot
+            plt.plot(df[scorer][bpt]['x'][frame_start:frame_end], -df[scorer][bpt]['y'][frame_start:frame_end], color=c_f)
+        prev_value = value
+        # prev_index = index
+    plt.title("Walking pattern of the mouse")
+    plt.xlabel("x location [AU]")
+    plt.ylabel("y location [AU]")
+# plt.savefig("../frontend/public/output3.jpg")
+walking_pattern()
+plt.savefig("../frontend/src/output3.jpg")
 plt.close('all')
+walking_pattern()
+plt.savefig("../frontend/public/output3.jpg")
+plt.close('all')
+# plotly_fig = mpl_to_plotly(fig)  # Convert Matplotlib figure to Plotly
+
+# # Save the Plotly graph as JSON or image
+# plotly_fig_json = plotly_fig.to_json()

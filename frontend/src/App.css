@@ -1,3 +1,42 @@
+body {
+  margin: 50px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 400px;
+  font-family: sans-serif;
+}
+
+.tabs__label {
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.tabs__radio {
+  display: none;
+}
+
+.tabs__content {
+  order: 1;
+  width: 100%;
+  border-bottom: 3px solid #dddddd;
+  line-height: 1.5;
+  font-size: 0.9em;
+  display: none;
+}
+
+.tabs__radio:checked + .tabs__label {
+  font-weight: bold;
+  color: #009578;
+  border-bottom: 2px solid #009578;
+}
+
+.tabs__radio:checked + .tabs__label + .tabs__content {
+  display: initial;
+}
+
 /* #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -46,7 +85,7 @@
 }
 
 .index {
-  background-color: #5a6d67;
+  background-color: #fbfaf7;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -54,7 +93,7 @@
 }
 
 .index .div-3 {
-  background-color: #5a6d67;
+  background-color: #fbfaf7;
   height: 1080px;
   overflow: hidden;
   position: relative;
@@ -112,7 +151,7 @@
 
 .index .text-wrapper-4 {
   color: #291b25;
-  background-color: #c7ddcc;
+  background-color: #e6e6e6;
   /* border-radius: 10px; */
   /* border-width: 40; */
   display:inline-flex;
@@ -188,15 +227,17 @@
 }
 
 .text-wrapper-7 label,
-.text-wrapper-4 label {
-  width: 350px; /* Set the width of the labels */
+.text-wrapper-4 label,
+.text-wrapper-11 label {
+  width: 408.34px; /* Set the width of the labels */
+  height: 48px;
   text-align: left;
   margin-right: 10px; /* Adjust margin as needed */
 }
 
 .index .text-wrapper-7 {
   color: #291b25;
-  background-color: #c7ddcc;
+  background-color: #e6e6e6;
   /* border-radius: 10px; */
   display: inline-flex;
   gap: 25px;
@@ -238,7 +279,7 @@
   top: 60%;
   width: 40%; */
   color: #291b25;
-  background-color: #c7ddcc;
+  background-color: #e6e6e6;
   /* border-radius: 10px; */
   display: inline-flex;
   gap: 25px;
@@ -257,7 +298,7 @@
 
 .index .frame-2 {
   align-items: center;
-  background-color: #c7ddcc;
+  background-color: #e6e6e6;
   /* border-radius: 15px; */
   display: inline-flex;
   gap: 10px;
@@ -291,7 +332,7 @@
 
 .index .frame-3 {
   align-items: center;
-  background-color: #c7ddcc;
+  background-color: #e6e6e6;
   /* border-radius: 15px; */
   display: inline-flex;
   gap: 10px;
@@ -322,7 +363,7 @@
 
 .index .frame-4 {
   align-items: center;
-  background-color: #c7ddcc;
+  background-color: #e6e6e6;
   /* border-radius: 15px; */
   display: inline-flex;
   gap: 10px;

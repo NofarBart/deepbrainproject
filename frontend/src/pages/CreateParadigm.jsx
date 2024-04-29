@@ -99,15 +99,6 @@ const CreateParadigm = () => {
     return (
         <div className="index">
         <div className="div-3">
-          <div className="overlap">
-            <div className="a-mouse-from-th-wrapper">
-              <img
-                className="a-mouse-from-th"
-                alt="A mouse from th"
-                src={require('../images/a-mouse-from-th.png')}
-              />
-            </div>
-          </div>
           {/* <div className="text-wrapper-10" style={{ backgroundColor: 'rgba(49, 63, 71, 0.3)' }}> */}
             <form id="myForm"  className="form-row align-items-center alert alert-success text-wrapper-9" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }} onSubmit={handleSubmit}>
               <div>

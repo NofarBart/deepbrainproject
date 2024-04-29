@@ -7,12 +7,13 @@ import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
 import { VscAdd, VscChromeMinimize, VscPlay, VscPrimitiveSquare, VscSend, VscGraph, VscGraphLine } from "react-icons/vsc";
 import { BsPencil, BsBoxArrowInLeft} from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import Axios from 'axios';
 // import Tab from 'react-bootstrap/Tab';
 // import Tabs from 'react-bootstrap/Tabs';
 
 
-import React, { useEffect, useState } from "react";
-import Axios from 'axios';
+
 // import fs;
 // const fs = require('fs');
 // const path = require('path');
@@ -25,6 +26,7 @@ let flag_kill = zero;
 
 const Home = () => {
   // will update list as database updates on refreshing the site
+  // const [htmlContent, setHtmlContent] = useState('');
   const [paradigms, setParadigms] = useState([])
   const [animals, setAnimals] = useState([])
   const [sessions, setSessions] = useState([])
@@ -44,7 +46,18 @@ const Home = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showBodyPartsModal, setShowBodyPartsModal] = useState(false);
   const [selectedBodyPartOption, setSelectedBodyPartOption] = useState('');
-  const [key, setKey] = useState('home');
+
+  // useEffect(() => {
+  //   // Fetch HTML content from backend
+  //   Axios.get('http://localhost:3000/graphs.html')
+  //     .then((response) => {
+  //       setHtmlContent(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching HTML content:', error);
+  //     });
+  // }, []);
+
 
     // Function to toggle modal visibility
     const toggleModal = () => {
@@ -90,6 +103,7 @@ const Home = () => {
     .then(response => {
       document.getElementById('spinner').style.display = "none";
       document.getElementById("python").innerHTML = "";
+      navigateToGraphs();
     });
   }
 
@@ -406,7 +420,8 @@ useEffect(() => {
         //   setOutput("No analyzed videos found for graph plotting.")
         // }
       })
-  }, [])
+      .catch(err => console.log(err))
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
 // Function to handle radio button change
 const handleRadioChange = (event) => {
@@ -560,20 +575,16 @@ const handleRadioChangeBodyPart = (event) => {
       // flag_kill = zero
   }
 
+
   return (
     
     <div className="index">
   <div className="div-3">
     <div className="overlap">
       <div className="a-mouse-from-th-wrapper">
-        <img
-          className="a-mouse-from-th"
-          alt="A mouse from th"
-          src={require('../images/a-mouse-from-th.png')}
-        />
       </div>
       <div className="text-wrapper-10" style={{ backgroundColor: 'rgba(49, 63, 71, 0.3)' }}>
-        <div className="alert alert-success text-wrapper-6" role="alert" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+        <div className="alert alert-success text-wrapper-6" role="alert" >
           <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>
           {/* <input directory="" webkitdirectory="" type="file" /> */}
           <div style={{ display: 'inline-block' }}>
@@ -605,7 +616,7 @@ const handleRadioChangeBodyPart = (event) => {
             </Modal>
           </div>
         </div>
-        <div className="text-wrapper-4" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+        <div className="text-wrapper-4" >
           <label htmlFor="experimental-paradigm">Experimental Paradigm:</label>
           <select
             id="experimental-paradigm"
@@ -623,7 +634,7 @@ const handleRadioChangeBodyPart = (event) => {
             <Button name="options" id="option2" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteParadigm}><VscChromeMinimize /></Button>
           </div>
         </div>
-        <div className="text-wrapper-7" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+        <div className="text-wrapper-7" >
           <label htmlFor="subject">Subject:</label>
           <select
             id="subject"
@@ -641,12 +652,12 @@ const handleRadioChangeBodyPart = (event) => {
             <Button name="options" id="option2" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteAnimal}><VscChromeMinimize /></Button>
           </div>
         </div>
-        <div className="text-wrapper-11" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+        <div className="text-wrapper-11" >
           <label htmlFor="session">Session:</label>
           <select
             id="session"
             className="form-select"
-            style={{ right: '100px', left: '100px' }}
+            style={{ marginRight: '130px' }}
             onChange={handleSelectChangeSess}
           >
             <option value="">select session</option>
@@ -654,8 +665,12 @@ const handleRadioChangeBodyPart = (event) => {
               <option key={index}>{session}</option>
             ))}
           </select>
+          {/* <div className="btn-group btn-group-toggle" data-toggle="buttons">
+            <Button name="options" id="option1" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="add" onClick={navigateToCreateAnimal}><VscAdd /></Button>
+            <Button name="options" id="option2" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteAnimal}><VscChromeMinimize /></Button>
+          </div> */}
           </div>
-        <div className="alert alert-success text-wrapper-5" role="alert" style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+        <div className="alert alert-success text-wrapper-5" role="alert" >
           {selectedFolder && (
             <div>
               Selected Folder: {selectedFolder}
@@ -670,7 +685,7 @@ const handleRadioChangeBodyPart = (event) => {
           </div>
         
         {/* <div className="alert alert-success text-wrapper-10" role="alert"></div> */}
-        <div style={{ backgroundColor: 'rgba(199, 221, 204, 0.8)' }}>
+        <div >
           {isVisible && <div className="alert alert-danger" role="alert">Fill both paradigm and animal name!</div>}
           <div className="my-3 d-flex justify-content-between align-items-center">
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
@@ -733,14 +748,18 @@ const handleRadioChangeBodyPart = (event) => {
               </Modal.Footer>
             </Modal>
           </div>
-          <script src="line_chart.js"></script>
+          {/* <div dangerouslySetInnerHTML={{ __html: htmlContent }} /> */}
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
             <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()} disabled={isButtonDisabled}><VscPlay size={20}/> Run</Button>
             <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()} disabled={isButtonDisabled}><VscPrimitiveSquare size={20}/> Stop</Button>
           </div>
           </div>
         </div>
-        
+        <style>
+
+</style>
+{/* <html src={require('../graphs.html')} ></html> */}
+{/* <div id="fig_el2598423651230991367213487935"></div> */}
         
       </div>
     </div>
