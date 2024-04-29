@@ -93,4 +93,28 @@ directoryRouter.post('/sessions', (req, res) => {
         });
     });
 });
+
+// Define route handler for '/select-folder' POST requests
+directoryRouter.post('/delete-photos', (req, res) => {
+    // console.log(req.body);
+    // Read the contents of the directory
+    
+    fs.rm("../frontend/public/output1.jpg", function (err) {
+        if (err) {
+            return res.status(404).json({ message: 'No photo found.' });
+        }
+    });
+
+    fs.rm("../frontend/public/output2.jpg", function (err) {
+        if (err) {
+            return res.status(404).json({ message: 'No photo found.' });
+        }
+    });
+
+    fs.rm("../frontend/public/output3.jpg", function (err) {
+        if (err) {
+            return res.status(404).json({ message: 'No photo found.' });
+        }
+    });
+});
 export default directoryRouter;

@@ -19,6 +19,14 @@ const Graphs = () => {
     const navigateToHome = () => {
         // 👇️ navigate to /contacts
         navigate('/');
+        Axios.post('http://localhost:5555/directory/delete-photos')
+    .catch(error => {
+      if (error.response && error.response.status === 404) {
+
+        return;
+      } else if (!error.ok) {
+      }
+    });
       };
 
     const handleTabClick = (tabNumber) => {

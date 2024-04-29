@@ -200,7 +200,7 @@ pythonRouter.post('/create-plots', (req, res) => {
 
         // Handle process exit
         pythonProcess.on('exit', (exitCode) => {
-            console.log(`Python script exited with code ${exitCode}`);
+            console.log(`Python script exiteddddd ${exitCode}`);
             isProcessing = false;
             return res.json({ exitCode }); // Send the exit code
         });
