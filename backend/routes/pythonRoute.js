@@ -178,6 +178,8 @@ pythonRouter.post('/create-plots', (req, res) => {
 
     const h5File = JSON.parse(req.body.body).name;
     const bodyPart = JSON.parse(req.body.body).bpt;
+    const graphs = JSON.parse(req.body.body).graphs;
+    const graph_title = JSON.parse(req.body.body).title;
     const pythonScriptPath = 'deeplabcut/analyze.py';
     
     if (!fs.existsSync(h5File)) {
@@ -188,7 +190,7 @@ pythonRouter.post('/create-plots', (req, res) => {
         isProcessing = true;
 
         // Execute the command using spawn
-        pythonProcess = spawn('python', [pythonScriptPath, h5File, bodyPart], { shell: true, stdio: 'pipe' });
+        pythonProcess = spawn('python', [pythonScriptPath, h5File, bodyPart, graphs, graph_title], { shell: true, stdio: 'pipe' });
 
         pythonProcess.stdout.on('data', (data) => {
             console.log('Python script output:', data.toString());
@@ -200,7 +202,7 @@ pythonRouter.post('/create-plots', (req, res) => {
 
         // Handle process exit
         pythonProcess.on('exit', (exitCode) => {
-            console.log(`Python script exiteddddd ${exitCode}`);
+            console.log(`Python script exited ${exitCode}`);
             isProcessing = false;
             return res.json({ exitCode }); // Send the exit code
         });

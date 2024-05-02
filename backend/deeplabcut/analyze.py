@@ -7,56 +7,58 @@ and determain wheter there was movement.
 Positive velocities meaning the mouse run (in x) and negative that it stopped (the wheel is moving but mouse isn't
 or at least that the leg if chosen is finishing movement- is moving back).
 '''
-# import sys
-import deeplabcut
+# imports
 import dlc2kinematics
-import pandas as pd
-from dlc2kinematics import Visualizer2D, Visualizer3D
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 import os
 import numpy as np
-import pandas as pd
 import sys
-import cv2
-import mpld3
-import plotly.graph_objs as go
-from plotly.tools import mpl_to_plotly
 import time_in_each_roi #the function needs to be in the same folder as the notebook
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-import keras
+
+# constants
 ZERO = 0
 ONE = 1
 TWO = 2
 THREE = 3
+FOUR = 4
+ZERO_STR = '0'
+ONE_STR = '1'
+TWO_STR = '2'
+THREE_STR = '3'
 END = 100 # End of frames in x (in graph) 
 THRESHOLD = 50
-shuffle = ONE
-VideoType = 'mp4'
+IMG_PATH = "../frontend/src/images/"
 
-
-# Path to the video file
+# Get path to the h5 relevant file, to extract data
 h5 = os.path.join(os.getcwd(),sys.argv[ONE])
+
+# Get the specific bodypart to analyze
 bpt = sys.argv[TWO]
+# Get the specific bodypart to analyze
+graph_generator = sys.argv[THREE]
 
+print("graph_generator is: ",graph_generator)
+# Get the specific bodypart to analyze
+graph_title = sys.argv[FOUR]
 
+print("graph_title is: ", graph_title)
+# Load and seperate data
 df, bodyparts, scorer = dlc2kinematics.load_data(h5)
 
+# Use DLC2Kinematics function to compute velocity for the specific bodypart
 df_vel_bodypart = dlc2kinematics.compute_velocity(df,bodyparts=[bpt], filter_window=THREE, order=ONE)
 df_vel_bodypart
 
-
-
 # Compute the average of 'x' values
-average_x = df[scorer][bpt]['x'].median()
+average_x = df[scorer][bpt]['x'].mean()
+
+print(average_x)
 # Compute the average of 'x' values
 average_y = df[scorer][bpt]['y'].median()
 
-# Print the average
-print("Average of 'x' values:", average_x)
-# Print the average
-print("Average of 'y' values:", average_y)
-
+# Go over velocities of the bodypart in every frame
 for index, value in df_vel_bodypart[(scorer, bpt, 'x')].items():
 # Apply the condition to set the values in df[scorer][bpt] to zero based on velocity criteria
     if (df_vel_bodypart.loc[index, (scorer, bpt, 'x')] > 30) or (df_vel_bodypart.loc[index, (scorer, bpt, 'x')] < -30):
@@ -68,7 +70,7 @@ for index, value in df_vel_bodypart[(scorer, bpt, 'x')].items():
         # df.loc[index, (scorer, bpt, 'x')] = 200
 for index, value in df[scorer][bpt]['x'].items():
 # Apply the condition to set the values in df[scorer][bpt] to zero based on velocity criteria
-    if ((df.loc[index, (scorer, bpt, 'x')] > 330)):
+    if ((df.loc[index, (scorer, bpt, 'x')] > 1.5 * average_x)):
         # df_vel_bodypart.loc[index, (scorer, bpt, 'x')] = 0
         # df_vel_bodypart.loc[index, (scorer, bpt, 'y')] = 0
         if (index > 2):
@@ -81,7 +83,8 @@ print(df[scorer][bpt])
 #plot 1
 ########################
 #Set the size of the matplotlib canvas
-fig = plt.figure(figsize = (18,8))
+# fig = plt.figure(figsize = (18,8))
+
 
 def velocity():
     ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")    
@@ -89,14 +92,32 @@ def velocity():
     plt.ylabel("velocity (AU)")
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
-    plt.title("Computed Velocity", loc="left")
+    if graph_title == "something":
+        plt.title("Computed Velocity " + bpt, loc="left")
+    elif graph_title == "empty":
+        plt.title(" " ,loc="left")
+    else:
+        # Check if at least one argument is provided (the script itself is sys.argv[0])
+        if len(sys.argv) >= FOUR:
+            # Join all command-line arguments after the script name (sys.argv[0])
+            input_string = ' '.join(sys.argv[FOUR:])
+            print("Input String:", input_string)
+        else:
+            print("No input provided.")
+        # counter = FOUR
+        # while sys.argv[counter + ONE] != None:
+        #     counter = counter + ONE
+        #     graph_title = graph_title + " " + sys.argv[counter]
+        plt.title(input_string, loc="left")
     plt.legend(loc='lower left', labels=['x', 'y', 'likelihood'])
 
-velocity()
-plt.savefig("../frontend/src/output1.jpg")
-plt.close('all')
-velocity()
-plt.savefig("../frontend/public/output1.jpg")
+if graph_generator == ZERO_STR or graph_generator == THREE_STR:
+    print("entered velocity graph")
+    velocity()
+    plt.savefig(IMG_PATH + "output1.jpg")
+    plt.close('all')
+    velocity()
+    plt.savefig("../frontend/public/output1.jpg")
 ########################
 #Subplot 2
 ########################
@@ -108,14 +129,32 @@ def position():
     plt.ylabel("position")
     ax1.spines["right"].set_visible(False)
     ax1.spines["top"].set_visible(False)
-    plt.title("Loaded Position Data", loc="left")
+    if graph_title == "something":
+        plt.title("Loaded Position Data " + bpt, loc="left")
+    elif graph_title == "empty":
+        plt.title(" " ,loc="left")
+    else:
+        if len(sys.argv) >= FOUR:
+            # Join all command-line arguments after the script name (sys.argv[0])
+            input_string = ' '.join(sys.argv[FOUR:])
+            print("Input String:", input_string)
+        else:
+            print("No input provided.")
+        # counter = FOUR
+        # while sys.argv[counter + ONE] != None:
+        #     counter = counter + ONE
+        #     graph_title = graph_title + " " + sys.argv[counter]
+        plt.title(input_string, loc="left")
     plt.legend(loc='lower left')
-position()
-plt.savefig("../frontend/src/output2.jpg")
-plt.close('all')
-position()
-plt.savefig("../frontend/public/output2.jpg")
-plt.close('all')
+
+if graph_generator == ONE_STR or graph_generator == THREE_STR:
+    print("entered position graph")
+    position()
+    plt.savefig(IMG_PATH + "output2.jpg")
+    plt.close('all')
+    position()
+    plt.savefig("../frontend/public/output2.jpg")
+    plt.close('all')
 
 ########################
 #plot 3
@@ -163,16 +202,33 @@ def walking_pattern():
             plt.plot(df[scorer][bpt]['x'][frame_start:frame_end], -df[scorer][bpt]['y'][frame_start:frame_end], color=c_f)
         prev_value = value
         # prev_index = index
-    plt.title("Walking pattern of the mouse")
+    if graph_title == "something":
+        plt.title("Walking pattern of the mouse " + bpt, loc="left")
+    elif graph_title == "empty":
+        plt.title(" " ,loc="left")
+    else:
+        if len(sys.argv) >= FOUR:
+            # Join all command-line arguments after the script name (sys.argv[0])
+            input_string = ' '.join(sys.argv[FOUR:])
+            print("Input String:", input_string)
+        else:
+            print("No input provided.")
+        # counter = FOUR
+        # while sys.argv[counter + ONE] != None:
+        #     counter = counter + ONE
+        #     graph_title = graph_title + " " + sys.argv[counter]
+        plt.title(input_string, loc="left")
     plt.xlabel("x location [AU]")
     plt.ylabel("y location [AU]")
 # plt.savefig("../frontend/public/output3.jpg")
-walking_pattern()
-plt.savefig("../frontend/src/output3.jpg")
-plt.close('all')
-walking_pattern()
-plt.savefig("../frontend/public/output3.jpg")
-plt.close('all')
+if graph_generator == TWO_STR or graph_generator == THREE_STR:
+    print("entered walking pattern graph")
+    walking_pattern()
+    plt.savefig(IMG_PATH + "output3.jpg")
+    plt.close('all')
+    walking_pattern()
+    plt.savefig("../frontend/public/output3.jpg")
+    plt.close('all')
 # plotly_fig = mpl_to_plotly(fig)  # Convert Matplotlib figure to Plotly
 
 # # Save the Plotly graph as JSON or image

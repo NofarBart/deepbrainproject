@@ -89,7 +89,7 @@ const Home = () => {
   console.log(withH5Extension); // Output: '/path/to/video.h5'
   console.log(selectedBodyPartOption);
   // setSelectedFolder(null);
-  const data_folder = { name: withH5Extension, bpt: selectedBodyPartOption }; // Object with key "name" and value "path"
+  const data_folder = { name:withH5Extension, bpt:selectedBodyPartOption, graphs:3, title:"something" }; // Object with key "name" and value "path"
   const options_folder = {
     method: 'POST',
     headers: {
@@ -101,9 +101,7 @@ const Home = () => {
     document.getElementById("spinner").style.display = "block"
   Axios.post('http://localhost:5555/python/create-plots', options_folder)
     .then(response => {
-      document.getElementById('spinner').style.display = "none";
-      document.getElementById("python").innerHTML = "";
-      navigateToGraphs();
+      navigateToGraphs(withH5Extension);
     });
   }
 
@@ -134,9 +132,9 @@ const handleSave = () => {
 
   const navigate = useNavigate();
 
-  const navigateToGraphs = () => {
+  const navigateToGraphs = (withH5Extension) => {
     // 👇️ navigate to /contacts
-    navigate('/graphs', {replace: true});
+    navigate('/graphs', {replace: true, state: {bodypart: selectedBodyPartOption, path: animal_name + "\\" + paradigm_name + "\\" + session_number + "\\" + selectedOption, h5: withH5Extension}});
   };
 
   const navigateToCreateParadigm = () => {
