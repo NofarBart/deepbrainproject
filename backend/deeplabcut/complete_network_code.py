@@ -33,11 +33,11 @@ config = os.path.join(os.getcwd(),sys.argv[ONE])
 video_path = os.path.join(os.getcwd(),sys.argv[TWO])
 print("config path is: ", config)
 print("video dir path is: ", video_path)
-h5 = 'C:\Experiment16-Tester16-2024-02-21\\videos\\vid2DLC_resnet50_Experiment16Feb21shuffle1_7800.h5'
+# h5 = 'C:\Experiment16-Tester16-2024-02-21\\videos\\vid2DLC_resnet50_Experiment16Feb21shuffle1_7800.h5'
 
 print("start analyzing videos...")
 deeplabcut.analyze_videos(config,[video_path], videotype=VideoType)
-deeplabcut.create_labeled_video(config, [video_path], videotype='.mp4', trailpoints=5, save_frames = True)
+deeplabcut.create_labeled_video(config, [video_path], videotype=VideoType, trailpoints=5, save_frames = True)
 # print("start labeling videos...")
 # deeplabcut.create_labeled_video(config,[video_path])
 print("start plotting...")

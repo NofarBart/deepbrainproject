@@ -25,8 +25,6 @@ let session_number;
 let flag_kill = zero;
 
 const Home = () => {
-  // will update list as database updates on refreshing the site
-  // const [htmlContent, setHtmlContent] = useState('');
   const [paradigms, setParadigms] = useState([])
   const [animals, setAnimals] = useState([])
   const [sessions, setSessions] = useState([])
@@ -35,7 +33,6 @@ const Home = () => {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [output, setOutput] = useState('');
   const [selectedDirectory, setSelectedDirectory] = useState(localStorage.getItem('selectedDirectory') || 'C:\\info\\');
-  // const [selectedDirectory, setSelectedDirectory] = useState('C:\\\\info\\');
   const [pathInput, setPathInput] = useState(""); // State to hold the input value in the modal
   const [show, setShow] = useState(false);
     // State to manage modal visibility and selected radio button
@@ -46,18 +43,8 @@ const Home = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showBodyPartsModal, setShowBodyPartsModal] = useState(false);
   const [selectedBodyPartOption, setSelectedBodyPartOption] = useState('');
-
-  // useEffect(() => {
-  //   // Fetch HTML content from backend
-  //   Axios.get('http://localhost:3000/graphs.html')
-  //     .then((response) => {
-  //       setHtmlContent(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching HTML content:', error);
-  //     });
-  // }, []);
-
+  
+  let config_path = 'C:\\Experiment18-Tester18-2024-02-29\\config.yaml'
 
     // Function to toggle modal visibility
     const toggleModal = () => {
@@ -130,11 +117,26 @@ const handleSave = () => {
   toggleBodyPartModal();
 };
 
+const changeInfoToAnalysis = () => {
+  let newDirectoryPath = selectedDirectory;
+  if (newDirectoryPath.includes("info\\")) {
+    // Replace "info\" with "analysis\"
+    newDirectoryPath = newDirectoryPath.replace("info\\", "analysis\\");
+    console.log("Updated directory path:", newDirectoryPath);
+  } else {
+    console.log("Directory path does not contain 'info\\'");
+  }
+  return newDirectoryPath;
+} 
+
   const navigate = useNavigate();
 
   const navigateToGraphs = (withH5Extension) => {
     // 👇️ navigate to /contacts
-    navigate('/graphs', {replace: true, state: {bodypart: selectedBodyPartOption, path: animal_name + "\\" + paradigm_name + "\\" + session_number + "\\" + selectedOption, h5: withH5Extension}});
+    // Check if the directory path contains "info\" substring
+    let newPath = changeInfoToAnalysis();
+    let savingPath = newPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
+    navigate('/graphs', {replace: true, state: {bodypart: selectedBodyPartOption, path: animal_name + "_" + paradigm_name + "_" + session_number + "_" + selectedOption, h5: withH5Extension, save: savingPath}});
   };
 
   const navigateToCreateParadigm = () => {
@@ -394,7 +396,7 @@ useEffect(() => {
 // }, []);
 
   useEffect(()=> {
-    let config_path = 'C:\\Experiment18-Tester18-2024-02-29\\config.yaml'
+    
     console.log(path) 
     // setSelectedFolder(null);
     const data = { name: config_path }; // Object with key "name" and value "path"
@@ -454,7 +456,6 @@ const handleRadioChangeBodyPart = (event) => {
         };
           Axios.post('http://localhost:5555/directory/select-folder', options_folder)
             .catch(err => console.log(err))
-          let config_path = 'C:\\Experiment18-Tester18-2024-02-29\\config.yaml'
           
           const data = { config: config_path, videos: path }; // Object with key "name" and value "path"
           const options = {
@@ -531,10 +532,12 @@ const handleRadioChangeBodyPart = (event) => {
  */
 
   const createCSV = async () => {
+    let newPath = changeInfoToAnalysis();
+    let savingPath = newPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
     path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
           console.log(path) 
           // setSelectedFolder(null);
-          const data_folder = { name: path }; // Object with key "name" and value "path"
+          const data_folder = { name: path, save: savingPath }; // Object with key "name" and value "path"
           const options_folder = {
             method: 'POST',
             headers: {

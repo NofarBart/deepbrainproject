@@ -117,4 +117,62 @@ directoryRouter.post('/delete-photos', (req, res) => {
         }
     });
 });
+
+// Define route handler for '/select-folder' POST requests
+directoryRouter.post('/download-photo', (req, res) => {
+    // console.log(req.body);
+    // Read the contents of the directory
+    const name = JSON.parse(req.body.body).name;
+    const tab = JSON.parse(req.body.body).tab;
+    // Specify the path to the locally stored image
+    const sourceFilePath = '../frontend/src/images/output' + tab + '.jpg'; // Replace with the actual source file path
+    const destinationDir = JSON.parse(req.body.body).path;// Destination directory where you want to move or copy the images
+    // Read the image file
+    fs.readFile(sourceFilePath, (err, data) => {
+        if (err) {
+        console.error('Error reading file:', err);
+        return;
+        }
+    
+        // Write the image file to the target directory
+        const targetFilePath = path.join(destinationDir, name);
+        fs.writeFile(targetFilePath, data, (err) => {
+        if (err) {
+            console.error('Error writing file:', err);
+            return;
+        }
+    
+        console.log('Image saved successfully to', targetFilePath);
+        });
+//     // Read the files in the source directory
+//     fs.readdir(sourceDir, (err, files) => {
+//     if (err) {
+//         console.error('Error reading directory:', err);
+//         return;
+//     }
+
+//   // Loop through each file in the source directory
+//   files.forEach(file => {
+//     const sourceFile = path.join(sourceDir, file);
+//     const destinationFile = path.join(destinationDir, file);
+
+//     // Move or copy the file to the destination directory
+//     fs.copyFile(sourceFile, destinationFile, (err) => {
+//       if (err) {
+//         console.error('Error copying file:', err);
+//       } else {
+//         console.log(`File ${file} copied successfully to ${destinationDir}`);
+//         // Delete the file from the source directory after successful copy
+//         fs.unlink(sourceFile, (err) => {
+//           if (err) {
+//             console.error('Error deleting file:', err);
+//           } else {
+//             console.log(`File ${file} deleted from ${sourceDir}`);
+//           }
+//         });
+//       }
+//     });
+//   });
+    });
+});
 export default directoryRouter;

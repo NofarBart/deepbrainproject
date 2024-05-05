@@ -85,6 +85,7 @@ pythonRouter.post('/create-csv', (req, res) => {
         return res.status(200).json({ message: 'A request is already being processed.' });
     }
 
+    const newPath = JSON.parse(req.body.body).save;
     const h5Directory = JSON.parse(req.body.body).name;
     const pythonScriptPath = 'deeplabcut/csv_files.py';
     
@@ -107,7 +108,7 @@ pythonRouter.post('/create-csv', (req, res) => {
         isProcessing = true;
 
         // Execute the command using spawn
-        pythonProcess = spawn('python', [pythonScriptPath, h5Directory]);
+        pythonProcess = spawn('python', [pythonScriptPath, h5Directory, newPath]);
 
         pythonProcess.stdout.on('data', (data) => {
             output += data.toString();

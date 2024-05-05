@@ -64,7 +64,7 @@ const Graphs = () => {
         // };
         try {
             let g_title;
-            if(formData.name == " "){
+            if(formData.name === " "){
                 g_title = "empty";
             }
             else {
@@ -113,6 +113,33 @@ const Graphs = () => {
 
     const handleTabClick = (tabNumber) => {
         setSelectedTab(tabNumber);
+    };
+
+    const handleDownload = (imageName) => {
+        console.log("new image name is: ", imageName);
+        console.log("new path is: ", state.save);
+        console.log("tab is: ", selectedTab);
+        const data_folder = { path: state.save, name: imageName, tab: selectedTab }; // Object with key "name" and value "path"
+            const options_folder = {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data_folder)
+              };
+            // if (selectedTab === 1) {
+            //     document.getElementById('spinner1').style.display = "block"
+            // }
+            // else if (selectedTab === 2){
+            //     document.getElementById('spinner2').style.display = "block"
+            // }
+            // else {
+            //     document.getElementById('spinner3').style.display = "block"
+            // }
+            Axios.post('http://localhost:5555/directory/download-photo', options_folder)
+              .then(response => {
+                console.log("success!!")
+              });
     };
     
     return (
@@ -183,7 +210,7 @@ const Graphs = () => {
                      <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{ marginTop: '20px' }}>
                     <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsBoxArrowInLeft /></Button> 
                     
-                    <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="download"href='output1.jpg' download={'velocity-' + state.path + "-" + state.bodypart + ".jpg"}>
+                    <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="download"href='output1.jpg' download={'velocity-' + state.path + "-" + state.bodypart + ".jpg"} onClick={() => handleDownload('velocity-' + state.path + "-" + state.bodypart + ".jpg")}>
                     
                      <BsArrowBarDown  size={20}/> Download </Button></div>
                      <Spinner id='spinner1' animation="border" role="status" style={{ float: 'right', marginTop: '25px', marginRight: '10px' }}></Spinner>
@@ -212,7 +239,7 @@ const Graphs = () => {
                     <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{ marginTop: '20px' }}>
                     <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsBoxArrowInLeft /></Button> 
                     
-                    <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="download" href='output2.jpg' download={'position-' + state.path + "-" + state.bodypart + ".jpg"}><BsArrowBarDown  size={20}/> Download</Button></div>
+                    <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="download" href='output2.jpg' download={'position-' + state.path + "-" + state.bodypart + ".jpg"} onClick={() => handleDownload('position-' + state.path + "-" + state.bodypart + ".jpg")}><BsArrowBarDown  size={20}/> Download</Button></div>
                     <Spinner id='spinner2' animation="border" role="status" style={{ float: 'right', marginTop: '25px', marginRight: '10px' }}></Spinner>
                 </div>
                 <input type="radio" id="tab3" name="tabs" defaultChecked={selectedTab === 3} />
@@ -241,7 +268,7 @@ const Graphs = () => {
                     <div className="btn-group btn-group-toggle" data-toggle="buttons" style={{ marginTop: '20px' }}>
                     <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="return" onClick={navigateToHome}><BsBoxArrowInLeft /></Button> 
                     
-                    <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="download" href='output3.jpg' download={'walking_pattern-' + state.path + "-" + state.bodypart + ".jpg"} > <BsArrowBarDown size={20}/> Download</Button></div>
+                    <Button className='btn btn-outline-dark' variant='light' size="lg"  data-toggle="tooltip" data-placement="top" title="download" href='output3.jpg' download={'walking_pattern-' + state.path + "-" + state.bodypart + ".jpg"} onClick={() => handleDownload('walking_pattern-' + state.path + "-" + state.bodypart + ".jpg")}> <BsArrowBarDown size={20}/> Download</Button></div>
                 <Spinner id='spinner3' animation="border" role="status" style={{ float: 'right', marginTop: '25px', marginRight: '10px' }}></Spinner>
                 </div>
                 
