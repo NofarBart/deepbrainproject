@@ -87,7 +87,8 @@ print(df[scorer][bpt])
 
 
 def velocity():
-    ax = df_vel_bodypart[ZERO:len(df_vel_bodypart)].plot(kind="line")    
+    ax = df_vel_bodypart.iloc[ZERO:len(df_vel_bodypart), ZERO:TWO].plot(kind="line")
+    print("velocity ax is: ", ax) 
     plt.xlabel("Frame numbers")
     plt.ylabel("velocity (AU)")
     ax.spines["right"].set_visible(False)
@@ -124,7 +125,8 @@ if graph_generator == ZERO_STR or graph_generator == THREE_STR:
 # plt.subplot(1,3,2)
 
 def position():
-    ax1 = df[scorer][bpt][ZERO:len(df_vel_bodypart)].plot(kind="line")
+    ax1 = df[scorer][bpt].iloc[ZERO:len(df_vel_bodypart), ZERO:TWO].plot(kind="line")
+    print("position ax1 is: ",ax1)
     plt.xlabel("Frame numbers")
     plt.ylabel("position")
     ax1.spines["right"].set_visible(False)
