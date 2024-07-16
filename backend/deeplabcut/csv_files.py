@@ -16,6 +16,17 @@ output_directory = os.path.join(os.getcwd(), sys.argv[TWO])  # Change 'output_fo
 h5_directory = os.path.join(os.getcwd(), sys.argv[ONE])
 h5_files = [file for file in os.listdir(h5_directory) if file.endswith('.h5')]
 
+# Function to rename columns
+def rename_columns(df):
+    new_columns = []
+    for col in df.columns:
+        if isinstance(col, tuple) and len(col) == 3:
+            new_columns.append((col[1], col[2]))
+        else:
+            new_columns.append(col)
+    df.columns = pd.MultiIndex.from_tuples(new_columns) if isinstance(df.columns, pd.MultiIndex) else new_columns
+    return df
+
 # Loop through each .h5 file
 for h5_file in h5_files:
     # Construct the full path to the .h5 file
@@ -25,6 +36,11 @@ for h5_file in h5_files:
     df, bodyparts, scorer = dlc2kinematics.load_data(h5_path)
     df_vel_bodypart = dlc2kinematics.compute_velocity(df, bodyparts=['all'], filter_window=3, order=1)
     df_acc_bodypart = dlc2kinematics.compute_acceleration(df, bodyparts=['all'])
+
+    # Rename columns
+    df = rename_columns(df)
+    df_vel_bodypart = rename_columns(df_vel_bodypart)
+    df_acc_bodypart = rename_columns(df_acc_bodypart)
 
     # Generate CSV file names based on the .h5 file name
     csv_filename = h5_file.replace('.h5', '_pos_data.csv')
