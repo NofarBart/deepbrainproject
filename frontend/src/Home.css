@@ -1,0 +1,241 @@
+#spinner {
+  display: none;
+}
+
+.index {
+  background-color: #fbfaf7;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.index .div-3 {
+  background-color: #fbfaf7;
+  height: 1080px;
+  overflow: hidden;
+  position: relative;
+  width: 1920px;
+}
+
+.index .overlap {
+  height: 1100px;
+  left: -7px;
+  position: absolute;
+  top: -10px;
+  width: 1934px;
+}
+
+.index .a-mouse-from-th-wrapper {
+  align-items: flex-start;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 10px;
+  left: 0;
+  padding: 10px;
+  position: absolute;
+  top: 0;
+}
+
+.index .a-mouse-from-th {
+  height: 1080px;
+  mix-blend-mode: soft-light;
+  object-fit: cover;
+  position: relative;
+  width: 1914px;
+}
+
+.index .body-parts-instance {
+  left: 537px !important;
+  position: absolute !important;
+  top: 600px !important;
+}
+
+.index .component-1 {
+  left: 397px !important;
+  position: absolute !important;
+  top: 768px !important;
+}
+
+.index .component-instance {
+  left: 397px !important;
+  position: absolute !important;
+  top: 411px !important;
+}
+
+/* body {
+  display: inline;
+} */
+
+.index .text-wrapper-4 {
+  color: #291b25;
+  background-color: #e6e6e6;
+  /* border-radius: 10px; */
+  /* border-width: 40; */
+  display:inline-flex;
+  gap: 25px;
+  justify-content: center;
+  font-family: "Inter", Helvetica;
+  font-size: 20px;
+  font-weight: 600;
+  left: 30%;
+  letter-spacing: 1;
+  line-height: normal;
+  position: absolute;
+  top: 30%;
+  /* width: 361px; */
+  padding: 10px;
+  width: 40%; /* Set the desired width using viewport units */
+}
+
+.index .text-wrapper-5 {
+  left: 30%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 50%;
+  width: 40%;
+}
+
+.index .text-wrapper-10 {
+  height: 57%;
+  margin-left: 30%;
+  margin-top: 5%;
+  width: 40%;
+  background-color: #291b25;
+  border-radius: 10px;
+}
+
+.index .text-wrapper-6 {
+  left: 30%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 5%;
+  width: 40%;
+  padding: 10px;
+}
+
+.index .text-wrapper-7 {
+  color: #291b25;
+  background-color: #e6e6e6;
+  /* border-radius: 10px; */
+  display: inline-flex;
+  gap: 25px;
+  justify-content: center;
+  font-family: "Inter", Helvetica;
+  font-size: 20px;
+  font-weight: 600;
+  left: 30%;
+  letter-spacing: 1;
+  line-height: normal;
+  position: absolute;
+  top: 20%;
+  padding: 10px;
+  width: 40%; /* Set the desired width using viewport units */
+}
+
+.index .text-wrapper-8 {
+  color: #291b25;
+  font-family: "Inter", Helvetica;
+  font-size: 20px;
+  font-weight: 600;
+  left: 30%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 57.5%;
+  width: 40%;
+}
+
+.index .text-wrapper-11 {
+  color: #291b25;
+  background-color: #e6e6e6;
+  display: inline-flex;
+  gap: 25px;
+  justify-content: center;
+  font-family: "Inter", Helvetica;
+  font-size: 20px;
+  font-weight: 600;
+  left: 30%;
+  letter-spacing: 1;
+  line-height: normal;
+  position: absolute;
+  top: 40%;
+  padding: 10px;
+  width: 40%; /* Set the desired width using viewport units */
+}
+
+.index .frame-2 {
+  align-items: center;
+  background-color: #e6e6e6;
+  /* border-radius: 15px; */
+  display: inline-flex;
+  gap: 10px;
+  justify-content: center;
+  left: 549px;
+  padding: 10px;
+  position: absolute;
+  top: 931px;
+}
+
+.index .text-wrapper-9 {
+  left: 30%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 5%;
+  width: 40%;
+}
+
+
+.index .frame-3 {
+  align-items: center;
+  background-color: #e6e6e6;
+  display: inline-flex;
+  gap: 10px;
+  justify-content: center;
+  left: 400px;
+  padding: 10px;
+  position: absolute;
+  top: 931px;
+}
+
+.index .options-instance {
+  left: 549px !important;
+  position: absolute !important;
+  top: 320px !important;
+}
+
+.index .design-component-instance-node {
+  left: 549px !important;
+  position: absolute !important;
+  top: 219px !important;
+}
+
+.index .options-2 {
+  left: 786px !important;
+  position: absolute !important;
+  top: 128px !important;
+}
+
+.index .frame-4 {
+  align-items: center;
+  background-color: #e6e6e6;
+  display: inline-flex;
+  gap: 10px;
+  justify-content: center;
+  left: 705px;
+  padding: 10px;
+  position: absolute;
+  top: 675px;
+}
+
+.index .deepbrain-logo {
+  height: 212px;
+  left: 26px;
+  object-fit: cover;
+  position: fixed;
+  top: 26px;
+  width: 212px;
+}

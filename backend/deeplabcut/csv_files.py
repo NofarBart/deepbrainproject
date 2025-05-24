@@ -3,6 +3,8 @@ import dlc2kinematics
 import sys
 import pandas as pd
 
+import subprocess
+
 ONE = 1
 TWO = 2
 DF = "df_"
@@ -14,6 +16,9 @@ output_directory = os.path.join(os.getcwd(), sys.argv[TWO])  # Change 'output_fo
 
 # Get a list of all .h5 files in the directory
 h5_directory = os.path.join(os.getcwd(), sys.argv[ONE])
+
+subprocess.run(["python", "deeplabcut\create_dir_hierarchy.py", h5_directory, output_directory])
+
 h5_files = [file for file in os.listdir(h5_directory) if file.endswith('.h5')]
 
 # Function to rename columns

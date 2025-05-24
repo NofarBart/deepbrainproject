@@ -1,4 +1,5 @@
 import '../App.css'
+import '../Home.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
@@ -12,11 +13,7 @@ import Axios from 'axios';
 // import Tab from 'react-bootstrap/Tab';
 // import Tabs from 'react-bootstrap/Tabs';
 
-
-
-// import fs;
-// const fs = require('fs');
-// const path = require('path');
+// Constants
 const zero = 0
 const one = 1
 let paradigm_name;
@@ -25,49 +22,56 @@ let session_number;
 let flag_kill = zero;
 
 const Home = () => {
-  const [paradigms, setParadigms] = useState([])
-  const [animals, setAnimals] = useState([])
-  const [sessions, setSessions] = useState([])
-  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [paradigms, setParadigms] = useState([]) // List of paradigms
+  const [animals, setAnimals] = useState([]) // List of animals
+  const [sessions, setSessions] = useState([]) // List of sessions (repeating of the expirement)
+
+  const [selectedFolder, setSelectedFolder] = useState(null); // Folder selected by user for analysis
+  // ERROR for when plotting and paradigm/ animal was not chosen
   const [isVisible, setIsVisible] = useState(false);
-  const [isVisibleModal, setIsVisibleModal] = useState(false);
-  const [output, setOutput] = useState('');
-  const [selectedDirectory, setSelectedDirectory] = useState(localStorage.getItem('selectedDirectory') || 'C:\\info\\');
-  const [pathInput, setPathInput] = useState(""); // State to hold the input value in the modal
-  const [show, setShow] = useState(false);
+  // Shows error if user didn't select a video/ body part and pressed "send"
+  const [isVisibleModal, setIsVisibleModal] = useState(false); 
+  const [output, setOutput] = useState(''); // Output text from analysis
+// Set folder you open initially and remember the last one used
+  const [selectedRootPath, setSelectedRootPath] = useState(
+    localStorage.getItem('selectedRootPath') || 'C:\\info\\'); 
+  const [pathInput, setPathInput] = useState(""); // State to hold the root path input value in the modal
+  const [isPathModalOpen, setIsPathModalOpen] = useState(false); // Set path
     // State to manage modal visibility and selected radio button
-  const [list, setList] = useState([]);
-  const [listBodyParts, setListBodyParts] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [listVideos, setListVideos] = useState([]); // List of videos
+  const [listBodyParts, setListBodyParts] = useState([]); // list of body parts
+  const [showVideosModal, setShowVideosModal] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(''); // Selected video
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showBodyPartsModal, setShowBodyPartsModal] = useState(false);
-  const [selectedBodyPartOption, setSelectedBodyPartOption] = useState('');
+  const [selectedBodyPartOption, setSelectedBodyPartOption] = useState(''); // Selected body part
   
-  let config_path = 'C:\\Experiment18-Tester18-2024-02-29\\config.yaml'
+  let config_path = 'C:\\Example-Tester21-2025-05-21\\config.yaml'
 
-    // Function to toggle modal visibility
+    // Function to toggle choose videos modal visibility
     const toggleModal = () => {
-        setShowModal(!showModal);
+        setShowVideosModal(!showVideosModal);
     };
 
-    // Function to toggle modal visibility
+    // Function to toggle body parts modal visibility
     const toggleBodyPartModal = () => {
       setShowBodyPartsModal(!showBodyPartsModal);
   };
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // Functions to set path modal
+  const handleClose = () => setIsPathModalOpen(false);
+  const handleShow = () => setIsPathModalOpen(true);
 
+  // Save new path
   const handleSaveChanges = () => {
     if(pathInput !== "") {
-      setSelectedDirectory(pathInput); // Update selectedDirectory with the input value
+      setSelectedRootPath(pathInput); // Update selectedRootPath with the input value
     }
     handleClose(); // Close the modal after saving changes
   };
 
   const handleSaveContinue = () => {
-  path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number + "\\" + selectedOption;
+  path = selectedRootPath + animal_name + "\\" + paradigm_name + "\\" + session_number + "\\" + selectedOption;
   console.log(path) 
   const withoutLabeled = path.replace(/_labeled\.mp4$/, '.mp4');
   const parts = withoutLabeled.split('.');
@@ -92,6 +96,7 @@ const Home = () => {
     });
   }
 
+// Select body part 
 const handleBodyPartSave = () => {
   if(selectedOption === "") {
     setIsVisibleModal(true);
@@ -102,8 +107,6 @@ const handleBodyPartSave = () => {
  
   handleSaveContinue();
   setOutput(null);
-
-
 } 
 
 const handleSave = () => {
@@ -118,7 +121,7 @@ const handleSave = () => {
 };
 
 const changeInfoToAnalysis = () => {
-  let newDirectoryPath = selectedDirectory;
+  let newDirectoryPath = selectedRootPath;
   if (newDirectoryPath.includes("info\\")) {
     // Replace "info\" with "analysis\"
     newDirectoryPath = newDirectoryPath.replace("info\\", "analysis\\");
@@ -132,30 +135,32 @@ const changeInfoToAnalysis = () => {
   const navigate = useNavigate();
 
   const navigateToGraphs = (withH5Extension) => {
-    // 👇️ navigate to /contacts
+    // Navigate to /contacts
     // Check if the directory path contains "info\" substring
     let newPath = changeInfoToAnalysis();
     let savingPath = newPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
-    navigate('/graphs', {replace: true, state: {bodypart: selectedBodyPartOption, path: animal_name + "_" + paradigm_name + "_" + session_number + "_" + selectedOption, h5: withH5Extension, save: savingPath}});
+    navigate('/graphs', {replace: true, state: {bodypart: selectedBodyPartOption,
+       path: animal_name + "_" + paradigm_name + "_" + session_number + "_" + selectedOption, h5: withH5Extension,
+       save: savingPath}});
   };
 
   const navigateToCreateParadigm = () => {
-    // 👇️ navigate to /contacts
+    // Navigate to /contacts
     navigate('/createParadigm', {replace: true});
   };
 
   const navigateToDeleteParadigm = () => {
-    // 👇️ navigate to /contacts
+    // Navigate to /contacts
     navigate('/deleteParadigm', {replace: true});
   };
 
   const navigateToCreateAnimal = () => {
-    // 👇️ navigate to /contacts
+    // Navigate to /contacts
     navigate('/createAnimal', {replace: true});
   };
 
   const navigateToDeleteAnimal = () => {
-    // 👇️ navigate to /contacts
+    // Navigate to /contacts
     navigate('/deleteAnimal', {replace: true});
   };
 
@@ -178,7 +183,7 @@ animals.map(((animal, index) => {
 }));
 
 const getFiles = async () => {
-  path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+  path = selectedRootPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
   console.log(path) 
   // setSelectedFolder(null);
   const data_folder = { name: path }; // Object with key "name" and value "path"
@@ -191,7 +196,7 @@ const getFiles = async () => {
     };
   Axios.post('http://localhost:5555/directory/select-file-in-folder', options_folder)
     .then(response => {
-      setList(response.data)
+      setListVideos(response.data)
       console.log(response.data);
       if (response.data.length > zero) {
         setIsButtonDisabled(false);
@@ -217,12 +222,12 @@ const getFiles = async () => {
 
   // Example usage
   // const directoryPath = 'C:\\\\';
-  let path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+  let path = selectedRootPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
   // let response;
   let resultSection = null; // Initialize result section to null
 
   if (!selectedFolder) {
-    resultSection = <p>Running Section:</p>; // Display "Result Section" if folder is not chosen
+    resultSection = <p>Running Section:</p>; // Display "Running Section" if folder is not chosen
   }
   // else {
   //   getFiles();
@@ -250,7 +255,7 @@ const getFiles = async () => {
     document.getElementById("python").innerHTML = "";
 
     if (animal_name != null && paradigm_name != null && session_number == null) {
-      const path = selectedDirectory + animal_name + "\\" + paradigm_name;
+      const path = selectedRootPath + animal_name + "\\" + paradigm_name;
       setSelectedFolder(path);
       console.log(path)
       const data = { name: path }; // Object with key "name" and value "path"
@@ -268,7 +273,7 @@ const getFiles = async () => {
         if (animal_name != null && paradigm_name != null && session_number != null) {
           console.log("Entered the big place");
           console.log("Session number is: ", session_number);
-          const path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+          const path = selectedRootPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
           setIsButtonDisabled(false);
           setSelectedFolder(path);
           getFiles();
@@ -305,7 +310,7 @@ const getFiles = async () => {
     document.getElementById("python").innerHTML = "";
     // console.log(selectedName)
     if (animal_name != null && paradigm_name != null && session_number == null) {
-      const path = selectedDirectory + animal_name + "\\" + paradigm_name;
+      const path = selectedRootPath + animal_name + "\\" + paradigm_name;
       setSelectedFolder(path);
       console.log("changed pathhhh")
       console.log(path)
@@ -324,7 +329,7 @@ const getFiles = async () => {
         if (animal_name != null && paradigm_name != null && session_number != null) {
           console.log("Entered the big place");
           console.log("Session number is: ", session_number);
-          const path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+          const path = selectedRootPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
           setIsButtonDisabled(false);
           setSelectedFolder(path);
           getFiles();
@@ -356,7 +361,7 @@ const getFiles = async () => {
     setIsVisible(false)
     document.getElementById("python").innerHTML = "";
     if (animal_name != null && paradigm_name != null && session_number != null) {
-      const path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+      const path = selectedRootPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
       setIsButtonDisabled(false);
       setSelectedFolder(path);
       getFiles();
@@ -383,8 +388,8 @@ const getFiles = async () => {
 }, []);
 
 useEffect(() => {
-  localStorage.setItem('selectedDirectory', selectedDirectory);
-}, [selectedDirectory]);
+  localStorage.setItem('selectedRootPath', selectedRootPath);
+}, [selectedRootPath]);
 
 
 // useEffect(()=> {  
@@ -411,14 +416,6 @@ useEffect(() => {
       .then(response => {
         setListBodyParts(response.data.body_parts)
         console.log(response.data.body_parts);
-        // handleSaveContinue();
-        // if (response.data.length > zero) {
-        //   setIsButtonDisabled(false);
-        // }
-        // else {
-        //   setIsButtonDisabled(true);
-        //   setOutput("No analyzed videos found for graph plotting.")
-        // }
       })
       .catch(err => console.log(err))
   }, []);  // eslint-disable-line react-hooks/exhaustive-deps
@@ -443,7 +440,7 @@ const handleRadioChangeBodyPart = (event) => {
             return;
           }
           setIsVisible(false);
-          path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+          path = selectedRootPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
           console.log(path) 
           // setSelectedFolder(null);
           const data_folder = { name: path }; // Object with key "name" and value "path"
@@ -534,7 +531,7 @@ const handleRadioChangeBodyPart = (event) => {
   const createCSV = async () => {
     let newPath = changeInfoToAnalysis();
     let savingPath = newPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
-    path = selectedDirectory + animal_name + "\\" + paradigm_name + "\\" + session_number;
+    path = selectedRootPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
           console.log(path) 
           // setSelectedFolder(null);
           const data_folder = { name: path, save: savingPath }; // Object with key "name" and value "path"
@@ -589,11 +586,11 @@ const handleRadioChangeBodyPart = (event) => {
           <p>Please choose both paradigm and animal before pressing the "run" button. Results will appear in the corresponding directory.</p>
           {/* <input directory="" webkitdirectory="" type="file" /> */}
           <div style={{ display: 'inline-block' }}>
-            {selectedDirectory && (
-              <p style={{ display: 'inline', marginRight: '10px' }}>Relative path is: {selectedDirectory}</p>
+            {selectedRootPath && (
+              <p style={{ display: 'inline', marginRight: '10px' }}>Relative path is: {selectedRootPath}</p>
             )}
             <Button className='btn btn-outline-secondary' variant='light' size="sm" onClick={handleShow}><BsPencil size={16} /></Button>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={isPathModalOpen} onHide={handleClose}>
               <Modal.Header closeButton>
                 <Modal.Title>Change relative path for videos</Modal.Title>
               </Modal.Header>
@@ -666,10 +663,6 @@ const handleRadioChangeBodyPart = (event) => {
               <option key={index}>{session}</option>
             ))}
           </select>
-          {/* <div className="btn-group btn-group-toggle" data-toggle="buttons">
-            <Button name="options" id="option1" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="add" onClick={navigateToCreateAnimal}><VscAdd /></Button>
-            <Button name="options" id="option2" className='btn btn-outline-dark' variant='light' size="lg" data-toggle="tooltip" data-placement="top" title="delete" onClick={navigateToDeleteAnimal}><VscChromeMinimize /></Button>
-          </div> */}
           </div>
         <div className="alert alert-success text-wrapper-5" role="alert" >
           {selectedFolder && (
@@ -694,14 +687,14 @@ const handleRadioChangeBodyPart = (event) => {
             <Button className='btn btn-outline-light' name="options" id="option3" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="download csv files" autoComplete="off" onClick={() => createCSV()} disabled={isButtonDisabled}><VscGraph size={20}/> Save</Button>
             <Button className='btn btn-outline-light' name="options" id="option4" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="create graph" autoComplete="off" onClick={() =>  toggleModal()} disabled={isButtonDisabled}><VscGraphLine size={20}/> Plot</Button>
             {/* </label> */}
-            <Modal show={showModal} onHide={toggleModal} size='lg'>
+            <Modal show={showVideosModal} onHide={toggleModal} size='lg'>
                 <Modal.Header closeButton>
                     <Modal.Title>Choose videos</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        {list.map((item, index) => (
+                        {listVideos.map((item, index) => (
                             <Form.Check
                                 key={index}
                                 type="radio"
@@ -751,8 +744,8 @@ const handleRadioChangeBodyPart = (event) => {
           </div>
           {/* <div dangerouslySetInnerHTML={{ __html: htmlContent }} /> */}
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
-            <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()} disabled={isButtonDisabled}><VscPlay size={20}/> Run</Button>
-            <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()} disabled={isButtonDisabled}><VscPrimitiveSquare size={20}/> Stop</Button>
+            <Button className='btn btn-outline-light' name="options" id="option1" variant="dark" size="lg" type='radio' data-toggle="tooltip" data-placement="top" title="run deeplabcut" autoComplete="off" onClick={() => fetchData()}><VscPlay size={20}/> Run</Button>
+            <Button className='btn btn-outline-light' name="options" id="option2" variant="dark" size="lg" type='submit' data-toggle="tooltip" data-placement="top" title="stop deeplabcut" autoComplete="off" onClick={() => killPython()}><VscPrimitiveSquare size={20}/> Stop</Button>
           </div>
           </div>
         </div>

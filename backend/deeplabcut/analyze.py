@@ -205,7 +205,7 @@ def walking_pattern():
         prev_value = value
         # prev_index = index
     if graph_title == "something":
-        plt.title("Walking pattern of the mouse " + bpt, loc="left")
+        plt.title("Moving pattern of the mouse " + bpt, loc="left")
     elif graph_title == "empty":
         plt.title(" " ,loc="left")
     else:
