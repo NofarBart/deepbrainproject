@@ -9,10 +9,6 @@ export const paradigmSchema = mongoose.Schema(
             maxlength: 32,
             unique: true
         },
-        // dateStarted: {
-        //     type: Date,
-        //     default: new Date(), //this only returns one specific time which is server start time 
-        // },
         animalsNumber: {
             type: Number,
             required: [true, 'Please add a number of animals'],
@@ -23,15 +19,6 @@ export const paradigmSchema = mongoose.Schema(
             },
         
         },
-        // bodyParts: {
-        //     type: [Number],
-        //     default: [0],
-        //     required: [true, 'Please add body parts to analyze']
-        // },
-        // Animals: [{
-        //     type: ObjectId,
-        //     ref: "Animal",
-        //  }]
     },
     {
         timestamps: true,

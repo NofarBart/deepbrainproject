@@ -107,6 +107,7 @@ const handleBodyPartSave = () => {
  
   handleSaveContinue();
   setOutput(null);
+
 } 
 
 const handleSave = () => {
@@ -135,7 +136,7 @@ const changeInfoToAnalysis = () => {
   const navigate = useNavigate();
 
   const navigateToGraphs = (withH5Extension) => {
-    // Navigate to /contacts
+    // 👇️ navigate to /contacts
     // Check if the directory path contains "info\" substring
     let newPath = changeInfoToAnalysis();
     let savingPath = newPath + animal_name + "\\" + paradigm_name + "\\" + session_number;
@@ -145,22 +146,22 @@ const changeInfoToAnalysis = () => {
   };
 
   const navigateToCreateParadigm = () => {
-    // Navigate to /contacts
+    // 👇️ navigate to /contacts
     navigate('/createParadigm', {replace: true});
   };
 
   const navigateToDeleteParadigm = () => {
-    // Navigate to /contacts
+    // 👇️ navigate to /contacts
     navigate('/deleteParadigm', {replace: true});
   };
 
   const navigateToCreateAnimal = () => {
-    // Navigate to /contacts
+    // 👇️ navigate to /contacts
     navigate('/createAnimal', {replace: true});
   };
 
   const navigateToDeleteAnimal = () => {
-    // Navigate to /contacts
+    // 👇️ navigate to /contacts
     navigate('/deleteAnimal', {replace: true});
   };
 
@@ -390,15 +391,6 @@ const getFiles = async () => {
 useEffect(() => {
   localStorage.setItem('selectedRootPath', selectedRootPath);
 }, [selectedRootPath]);
-
-
-// useEffect(()=> {  
-//   // here we get the data by requesting data from this link
-//   // to our nodejs server
-//   Axios.get('http://localhost:5555/directories/session')
-//   .then(sessions => setSessions(sessions.data))
-//   .catch(err => console.log(err))
-// }, []);
 
   useEffect(()=> {
     
