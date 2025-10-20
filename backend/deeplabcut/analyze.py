@@ -105,10 +105,6 @@ def velocity():
             print("Input String:", input_string)
         else:
             print("No input provided.")
-        # counter = FOUR
-        # while sys.argv[counter + ONE] != None:
-        #     counter = counter + ONE
-        #     graph_title = graph_title + " " + sys.argv[counter]
         plt.title(input_string, loc="left")
     plt.legend(loc='lower left', labels=['x', 'y', 'likelihood'])
 
@@ -119,8 +115,9 @@ if graph_generator == ZERO_STR or graph_generator == THREE_STR:
     plt.close('all')
     velocity()
     plt.savefig("../frontend/public/output1.jpg")
+
 ########################
-#Subplot 2
+#plot 2
 ########################
 # plt.subplot(1,3,2)
 
@@ -142,10 +139,6 @@ def position():
             print("Input String:", input_string)
         else:
             print("No input provided.")
-        # counter = FOUR
-        # while sys.argv[counter + ONE] != None:
-        #     counter = counter + ONE
-        #     graph_title = graph_title + " " + sys.argv[counter]
         plt.title(input_string, loc="left")
     plt.legend(loc='lower left')
 
@@ -215,14 +208,10 @@ def walking_pattern():
             print("Input String:", input_string)
         else:
             print("No input provided.")
-        # counter = FOUR
-        # while sys.argv[counter + ONE] != None:
-        #     counter = counter + ONE
-        #     graph_title = graph_title + " " + sys.argv[counter]
         plt.title(input_string, loc="left")
     plt.xlabel("x location [AU]")
     plt.ylabel("y location [AU]")
-# plt.savefig("../frontend/public/output3.jpg")
+
 if graph_generator == TWO_STR or graph_generator == THREE_STR:
     print("entered walking pattern graph")
     walking_pattern()
@@ -231,7 +220,3 @@ if graph_generator == TWO_STR or graph_generator == THREE_STR:
     walking_pattern()
     plt.savefig("../frontend/public/output3.jpg")
     plt.close('all')
-# plotly_fig = mpl_to_plotly(fig)  # Convert Matplotlib figure to Plotly
-
-# # Save the Plotly graph as JSON or image
-# plotly_fig_json = plotly_fig.to_json()

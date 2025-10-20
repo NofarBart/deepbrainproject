@@ -1,3 +1,7 @@
+'''This file was supplied by DeepLabCut community.
+    It contains functions to extract time spent by the mouse in each of a list of user defined ROIS
+'''
+
 import numpy as np
 from collections import namedtuple
 from scipy.spatial import distance

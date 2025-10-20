@@ -1,3 +1,7 @@
+'''
+This file "create_dir_hierarchy.py" replicates the sub-directory structure from a source directory to a destination directory.
+'''
+
 import os
 import sys
 ONE = 1
@@ -19,9 +23,7 @@ def create_subdirs(src, dest):
 if __name__ == "__main__":
 
     source_directory = os.path.join(os.getcwd(),sys.argv[ONE])
-    # source_directory = os.path.join(os.getcwd(),'C:\\info')
     destination_directory = os.path.join(os.getcwd(),sys.argv[TWO])
-    # destination_directory = os.path.join(os.getcwd(),'C:\\analysis')
 
     if not os.path.isdir(source_directory):
         print(f"Source directory '{source_directory}' does not exist.")

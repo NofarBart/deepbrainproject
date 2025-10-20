@@ -1,3 +1,5 @@
+'''This file "body_parts.py" retrieves the body parts defined in a DeepLabCut configuration file.'''
+
 import deeplabcut
 import sys
 
@@ -11,8 +13,6 @@ MAX_ITERS = 500
 shuffle = ONE # edit if needed; 1 is the default.
 tracktype= 'ellipse' # box, skeleton, ellipse
 VideoType = 'mp4' # mp4, MOV, or avi, whatever you uploaded!
-
-# deeplabcut.create_new_project("trying", "nofar", r'D:\\testing_videos_new2\\vid1.mp4', working_directory = 'C:\\', copy_videos=True, multianimal=False)
 
 # Retrieve command-line arguments
 path_config_file = sys.argv[ONE]
